@@ -1,0 +1,36 @@
+Economy,2017,Mazda,2,123,AFRT 103,none,Head-On Collision,123
+Economy,2017,Mazda,2,123123,FART 423,none,Head-On Collision,123
+Economy,2017,Mazda,2,13,EFDT 423,none,None,123
+Compact,2018,Toyota,Yaris,0,RFTT 563,none,none,0
+Compact,2018,Toyota,Yaris,0,RFGT 963,none,none,0
+Compact,2018,Toyota,Yaris,0,GFRT 563,none,none,0
+Intermediate,2019,Hyundai,Accent,0,BQDF 315,none,none,0
+Intermediate,2019,Hyundai,Accent,0,ASD E324,none,none,0
+Intermediate,2019,Hyundai,Accent,12313,ERRR 324,none,None,1123
+Standard Size,2017,Chevrolet,Cruze,12,QWES 425,none,Head-On Collision,13
+Standard Size,2017,Chevrolet,Cruze,0,WWWS 525,none,none,0
+Standard Size,2017,Chevrolet,Cruze,12,WWES 425,none,Head-On Collision,12
+Full Size,2018,Chevrolet,Malibu,0,WFES 625,none,none,0
+Full Size,2018,Chevrolet,Malibu,1231,KKSS 915,none,None,1231
+Full Size,2018,Chevrolet,Malibu,0,SSSE 695,none,none,0
+Mini Van/7 Seater,2019,Dodge,Caravan,0,QQSE 625,none,none,0
+Mini Van/7 Seater,2019,Dodge,Caravan,0,QDRR 992,none,none,0
+Mini Van/7 Seater,2019,Dodge,Caravan,0,BQSE 625,none,none,0
+Premium,2017,Chrysler,300,0,BQDF 315,none,none,0
+Premium,2017,Chrysler,300,0,AQDF 915,none,none,0
+Premium,2017,Chrysler,300,0,FQFF 315,none,none,0
+Luxury,2019,Lincoln,MKX,0,FQSS 295,none,none,0
+Luxury,2019,Lincoln,MKX,1231,KKSS 995,none,None,1231
+Luxury,2019,Lincoln,MKX,0,SSWE 391,none,none,0
+Supreme,2018,Mercedes-Benz,C300,0,WASE 931,none,none,0
+Supreme,2018,Mercedes-Benz,C300,0,QWSE 410,none,none,0
+Supreme,2018,Mercedes-Benz,C300,0,WAWS 031,none,none,0
+Intermediate SUV,2017,Kia,Sportage,0,WDWS 499,none,none,0
+Intermediate SUV,2017,Kia,Sportage,0,DDWS 991,none,none,0
+Intermediate SUV,2017,Kia,Sportage,0,WDSS 491,none,none,0
+Standard SUV,2019,Ford,Explorer,0,DDSS 791,none,none,0
+Standard SUV,2019,Ford,Explorer,0,ASSS 911,none,none,0
+Standard SUV,2019,Ford,Explorer,0,QKSS 792,none,none,0
+Large SUV,2017,GMC,Yukon,0,KKSS 193,none,none,0
+Large SUV,2017,GMC,Yukon,0,RFGT 993,none,none,0
+Large SUV,2017,GMC,Yukon,0,AFRT 593,none,none,0
