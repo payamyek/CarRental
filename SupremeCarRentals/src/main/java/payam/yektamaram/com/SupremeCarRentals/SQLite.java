@@ -32,10 +32,9 @@ public class SQLite {
 		String sql;
 
 		try {
-
 			stmt = con.createStatement();
-			sql = "CREATE TABLE IF NOT EXISTS customer " + "(first_name TEXT," + "last_name TEXT," + "password TEXT,"
-					+ "email TEXT);";
+			sql = "CREATE TABLE customer (first_name TEXT, last_name TEXT, credit_card_number TEXT,"+ 
+                    "insurance_number TEXT, driver_license VARCHAR(17), email TEXT, PRIMARY KEY (driver_license));";
 			stmt.executeUpdate(sql);
 			stmt.close();
 
@@ -53,9 +52,10 @@ public class SQLite {
 				while (rs.next()) {
 					System.out.print("First Name: " + rs.getString("first_name"));
 					System.out.print(" Last Name: " + rs.getString("last_name"));
-					System.out.print(" Password: " + rs.getString("password"));
+					System.out.print(" Credit Card: " + rs.getString("credit_card_number"));
+					System.out.print(" Insurance: " + rs.getString("insurance_number"));
+					System.out.print(" Driver License: " + rs.getString("driver_license"));
 					System.out.println(" Email: " + rs.getString("email"));
-
 				}
 			}
 			else if (table.equals("car"))
@@ -69,6 +69,15 @@ public class SQLite {
 					System.out.print(" License Plate: " + rs.getString("licensePlate"));
 					System.out.println(" Status: " + rs.getString("status"));
 
+				}
+			}
+			else if (table.equals("reservation"))
+			{
+				while (rs.next()) {
+					System.out.print("Pick-Up: " + rs.getString("pick_up"));
+					System.out.print(" Drop-off: " + rs.getString("drop_off"));
+					System.out.print(" License Plate: " + rs.getString("license_plate"));
+					System.out.print(" Reservation Number: " + rs.getString("reservation_number"));
 				}
 			}
 			stmt.close();
@@ -116,15 +125,16 @@ public class SQLite {
 		return userExists;
 	}
 
-	private void insertCustomer(String firstName, String lastName, String password, String email) {
+	private void insertCustomer(String firstName, String lastName, String creditCardNumber, String insuranceNumber, String driverLicense, String email) {
 		try {
 			// pass.setPassword("secretshh");
-			preparedStmt = con.prepareStatement("INSERT INTO customer values (?, ?, ?, ?)");
+			preparedStmt = con.prepareStatement("INSERT INTO customer values (?, ?, ?, ?, ?, ?)");
 			preparedStmt.setString(1, firstName);
 			preparedStmt.setString(2, lastName);
-			preparedStmt.setString(3, password);
-			preparedStmt.setString(4, email);
-
+			preparedStmt.setString(3, creditCardNumber);
+			preparedStmt.setString(4, insuranceNumber);
+			preparedStmt.setString(5, driverLicense);
+			preparedStmt.setString(6, email);
 			// execute the preparedstatement
 			preparedStmt.execute();
 
@@ -232,7 +242,56 @@ public class SQLite {
 			e.printStackTrace();
 		}
 	}
+	
+	private void createReservationTable() {
+		String sql;
+		try {
+			stmt = con.createStatement();
+			sql = "CREATE TABLE reservation (pick_up TEXT, drop_off TEXT, license_plate VARCHAR(8)"+ 
+	                   "REFERENCES CAR(license_plate), reservation_number TEXT)";
+			stmt.executeUpdate(sql);
+			stmt.close();
 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void insertReservation (String pickUp, String dropOff, String licensePlate, String reservationNumber) {
+		try {
+
+			preparedStmt = con.prepareStatement("INSERT INTO reservation values (?, ?, ?, ?)");
+			preparedStmt.setString(1, pickUp);
+			preparedStmt.setString(2, dropOff);
+			preparedStmt.setString(3, licensePlate);
+			preparedStmt.setString(4, reservationNumber);
+
+			// execute the preparedstatement
+			preparedStmt.execute();
+
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				rs = null;
+			}
+			if (preparedStmt != null) {
+				try {
+					preparedStmt.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				preparedStmt = null;
+			}
+		}
+	}
+	
+	
 	private void dropTable(String table)
 	{
 		String sql;
@@ -288,9 +347,9 @@ public class SQLite {
 
 	public static void main(String args[]) {
 		SQLite db = new SQLite();
-		db.dropTable("car");
-		db.createCarTable();
-		db.insertCar("Economy", 2017, "Mazda", "6", 0, "AFRT 1231", "ACTIVE");
-		db.printTable("car");
+		db.dropTable("reservation");
+		db.createReservationTable();
+		db.insertReservation("2018-06-15 09:00", "2018-06-23 09:00", "AFYT 741", "INT-01");
+		db.printTable("reservation");
 	}
 }
