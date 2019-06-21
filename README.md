@@ -1,4 +1,4 @@
 # SupremeCarRentals
 
 # License
-[MIT](payamyek/SupremeCarRentals/LICENSE)
+[MIT](https://github.com/payamyek/SupremeCarRentals/blob/master/LICENSE)
