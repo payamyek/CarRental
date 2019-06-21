@@ -96,6 +96,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 @SuppressWarnings("serial")
 public class ProgramInterface extends JPanel implements ActionListener {
+	
+	SQLite db = new SQLite();
 
 	String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime());
 
@@ -835,57 +837,15 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		add(lblAvailableCars);
 
 		availableCars.setBounds(195, 216, 425, 28);
-
-		int x = 0;
-		try {
-			for (int i = 0; i <= c2.customerDatabase.size(); i++) {
-				if (i < c2.customerDatabase.size()) {
-					if (c2.customerDatabase.get(i).getLicensePlate().equals(j1.data[x][5])
-							&& c2.customerDatabase.get(i).getCarType().equals(j1.data[x][0])) {
-						if (c2.searchForCarDate(userPickUpDate, userDropOffDate, carTypeSelection) == true
-								&& j1.data[x][0].equals(carTypeSelection)) {
-							availableCars.addItem(j1.data[x][0] + " - " + j1.data[x][1] + " - " + j1.data[x][2] + " - "
-									+ j1.data[x][5]);
-						}
-					} else {
-						if (j1.data[x][0].equals(carTypeSelection)) {
-							availableCars.addItem(j1.data[x][0] + " - " + j1.data[x][1] + " - " + j1.data[x][2] + " - "
-									+ j1.data[x][5]);
-						}
-					}
-				} else if (i >= c2.customerDatabase.size() && x <= 35 && c2.customerDatabase.size() > 0) {
-					i = i - 1;
-					if (c2.customerDatabase.get(i).getLicensePlate().equals(j1.data[x][5])
-							&& c2.customerDatabase.get(i).getCarType().equals(j1.data[x][0])) {
-						if (c2.searchForCarDate(userPickUpDate, userDropOffDate, carTypeSelection) == true
-								&& j1.data[x][0].equals(carTypeSelection)) {
-							availableCars.addItem(j1.data[x][0] + " - " + j1.data[x][1] + " - " + j1.data[x][2] + " - "
-									+ j1.data[x][5]);
-						}
-					} else {
-						if (j1.data[x][0].equals(carTypeSelection)) {
-							availableCars.addItem(j1.data[x][0] + " - " + j1.data[x][1] + " - " + j1.data[x][2] + " - "
-									+ j1.data[x][5]);
-						}
-					}
-					i = 0;
-				} else if (c2.customerDatabase.size() == 0) {
-					for (int b = 0; b < 36; b++) {
-						if (j1.data[b][0].equals(carTypeSelection)) {
-							availableCars.addItem(j1.data[b][0] + " - " + j1.data[b][1] + " - " + j1.data[b][2] + " - "
-									+ j1.data[b][5]);
-						}
-					}
-				}
-				if (x >= 35) {
-					break;
-				}
-				x++;
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
+		
+		SQLite db = new SQLite();
+		
+		for (String car : db.getCarTypes(carTypeSelection))
+		{
+			if (car != null)
+				availableCars.addItem(car);
 		}
-
+		
 		add(availableCars);
 
 		JButton btnReserve = new JButton("Reserve");

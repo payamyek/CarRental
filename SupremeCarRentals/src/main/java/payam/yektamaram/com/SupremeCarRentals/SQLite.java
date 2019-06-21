@@ -1,6 +1,7 @@
 package payam.yektamaram.com.SupremeCarRentals;
 
 import java.sql.*;
+import java.util.Arrays;
 
 public class SQLite {
 
@@ -33,7 +34,7 @@ public class SQLite {
 
 		try {
 			stmt = con.createStatement();
-			sql = "CREATE TABLE customer (first_name TEXT, last_name TEXT, credit_card_number TEXT,"+ 
+			sql = "CREATE TABLE IF NOT EXISTS customer (first_name TEXT, last_name TEXT, credit_card_number TEXT,"+ 
                     "insurance_number TEXT, driver_license VARCHAR(17), email TEXT, PRIMARY KEY (driver_license));";
 			stmt.executeUpdate(sql);
 			stmt.close();
@@ -188,6 +189,32 @@ public class SQLite {
 		}
 	}
 
+	protected String [] getCarTypes(String carType)
+	{
+		String cars[] = new String[3];
+		int index = 0;
+		
+		
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM car WHERE type = '" + carType + "';");
+			
+			while(rs.next())
+			{
+				cars[index] = rs.getInt("year") + " - " + rs.getString("manufacturer") + " - " + rs.getString("model") + " - " + rs.getString("licensePlate");
+				index++;
+			}
+			
+			stmt.close();
+			rs.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return cars;
+	}
+	
 	private boolean validateLogin(String email, String password) {
 
 		boolean check = false;
@@ -233,7 +260,7 @@ public class SQLite {
 		String sql;
 		try {
 			stmt = con.createStatement();
-			sql = "CREATE TABLE car " + "(type TEXT," + "year INT," + "manufacturer TEXT," + "model TEXT,"
+			sql = "CREATE TABLE IF NOT EXISTS car"  + "(type TEXT," + "year INT," + "manufacturer TEXT," + "model TEXT,"
 					+ "odometer INT," + "licensePlate TEXT," + "status TEXT);";
 			stmt.executeUpdate(sql);
 			stmt.close();
@@ -241,6 +268,32 @@ public class SQLite {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		insertCar("Economy", 2019, "Toyota", "Prius", 0, "AFYT 754", "ACTIVE");
+		insertCar("Economy", 2019, "Toyota", "Prius", 0, "EFLT 656", "ACTIVE");
+		insertCar("Compact", 2019, "Toyota", "Yaris", 0, "LFRF 541", "ACTIVE");
+		insertCar("Compact", 2019, "Toyota", "Yaris", 0, "PKKT 254", "ACTIVE");
+		insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "RLYT 252", "ACTIVE");
+		insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "LLYT 532", "ACTIVE");
+		insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "IFSA 442", "ACTIVE");
+		insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "ILKS 545", "ACTIVE");
+		insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "ISSA 442", "ACTIVE");
+		insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "IURE 325", "ACTIVE");
+		insertCar("Minivan/7 Seater", 2019, "Dodge", "Caravan", 0, "FFSA 442", "ACTIVE");
+		insertCar("Minivan/7 Seater", 2019, "Dodge", "Caravan", 0, "IRRS 115", "ACTIVE");
+		insertCar("Premium", 2019, "Audi", "A3", 0, "FFFT 123", "ACTIVE");
+		insertCar("Premium", 2019, "Audi", "A3", 0, "OERE 141", "ACTIVE");
+		insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASAA 442", "ACTIVE");
+		insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASQQ 123", "ACTIVE");
+		insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "MONE 442", "ACTIVE");
+		insertCar("Supreme", 2019, "Rolls Royce" ,"Dawn", 0, "PEOP 123", "ACTIVE");
+		insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "AAAA 442", "ACTIVE");
+		insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "QQQQ 123", "ACTIVE");
+		insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "HWUO 252", "ACTIVE");
+		insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "KJWW 213", "ACTIVE");
+		insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "ADDA 123", "ACTIVE");
+		insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "KJKH 123", "ACTIVE");
+		
 	}
 	
 	private void createReservationTable() {
@@ -347,9 +400,7 @@ public class SQLite {
 
 	public static void main(String args[]) {
 		SQLite db = new SQLite();
-		db.dropTable("reservation");
-		db.createReservationTable();
-		db.insertReservation("2018-06-15 09:00", "2018-06-23 09:00", "AFYT 741", "INT-01");
-		db.printTable("reservation");
+		System.out.println(Arrays.toString(db.getCarTypes("Economy")));
+		
 	}
 }
