@@ -1,0 +1,5 @@
+language: java
+sudo: false
+script:
+  - cd SupremeCarRentals
+  - mvn clean install
