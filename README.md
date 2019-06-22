@@ -1,5 +1,5 @@
 # SupremeCarRentals 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Coverage Status](https://coveralls.io/repos/github/payamyek/SupremeCarRentals/badge.svg?branch=master)](https://coveralls.io/github/payamyek/SupremeCarRentals?branch=master) [![Build Status](https://travis-ci.com/payamyek/SupremeCarRentals.svg?branch=master)](https://travis-ci.com/payamyek/SupremeCarRentals) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Coverage Status](https://coveralls.io/repos/github/payamyek/SupremeCarRentals/badge.svg?branch=master)](https://coveralls.io/github/payamyek/SupremeCarRentals?branch=master) [![Build Status](https://travis-ci.com/payamyek/SupremeCarRentals.svg?branch=master)](https://travis-ci.com/payamyek/SupremeCarRentals) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
 SupremeCarRentals is a Java Program that can be used by a car rental company to create rental reservations, store customer information, and create a PDF invoice for reservations which can be printed.
 
