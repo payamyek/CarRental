@@ -18,15 +18,11 @@ public class DataCheck {
 	 *            email the email
 	 * @return true, if successful
 	 */
-	public static boolean emailCheck(String email) {
-		if (email.matches(
-				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-
-			return true;
-		} else {
-			return false;
-		}
+	public static boolean emailCheck(String email) 
+	{
+		return email.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$") ? true : false ;
 	}
+	
 
 	/**
 	 * Credit card check.
@@ -35,15 +31,12 @@ public class DataCheck {
 	 *            credit the credit
 	 * @return true, if successful
 	 */
-	public static boolean creditCardCheck(String credit) {
-		if (credit.matches("^4[0-9]{12}(?:[0-9]{3})?$") || credit.matches("^5[1-5][0-9]{14}$")) // mastercard
-		{
-			return true;
-		} else {
-			return false;
-		}
+	public static boolean creditCardCheck(String credit) 
+	{	
+		return (credit.matches("^4[0-9]{12}(?:[0-9]{3})?$") || credit.matches("^5[1-5][0-9]{14}$")) ? true : false ;
 	}
 
+	
 	/**
 	 * Insurance number check.
 	 * 
@@ -51,15 +44,12 @@ public class DataCheck {
 	 *            insurance the insurance
 	 * @return true, if successful
 	 */
-	public static boolean insuranceNumberCheck(String insurance) {
-
-		if (insurance.matches("^[A-Z]{5}[0-9]{2}$")) {
-			return true;
-		} else {
-			return false;
-		}
+	public static boolean insuranceNumberCheck(String insurance) 
+	{
+		return insurance.matches("^[A-Z]{5}[0-9]{2}$") ? true : false ;
 	}
 
+	
 	/**
 	 * Driver license number check.
 	 *
@@ -67,12 +57,9 @@ public class DataCheck {
 	 *            license the license
 	 * @return true, if successful
 	 */
-	public static boolean driverLicenseNumberCheck(String license) {
-		if (license.matches("^[A-Z][0-9]{4}-[0-9]{5}-[0-9]{5}$")) {
-			return true;
-		} else {
-			return false;
-		}
+	public static boolean driverLicenseNumberCheck(String license) 
+	{
+		return (license.matches("^[A-Z][0-9]{4}-[0-9]{5}-[0-9]{5}$") || license.matches("^[A-Z][0-9]{4}[0-9]{5}[0-9]{5}$")) ? true : false;
 	}
 
 }
