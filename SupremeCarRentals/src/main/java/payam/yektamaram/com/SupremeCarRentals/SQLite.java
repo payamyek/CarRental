@@ -397,10 +397,4 @@ public class SQLite {
 			}
 		}
 	}
-
-	public static void main(String args[]) {
-		SQLite db = new SQLite();
-		System.out.println(Arrays.toString(db.getCarTypes("Economy")));
-		
-	}
 }
