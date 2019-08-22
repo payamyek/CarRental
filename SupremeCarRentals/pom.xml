@@ -84,6 +84,12 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.27.2.1</version>
 		</dependency>
+		<dependency>
+    <groupId>io.sentry</groupId>
+    <artifactId>sentry</artifactId>
+    <version>1.7.27</version>
+</dependency>
+		
 	</dependencies>
 	
 </project>
