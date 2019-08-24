@@ -140,4 +140,21 @@ public class DataCheckTest extends TestCase{
 		assertFalse(DataCheck.driverLicenseNumberCheck(""));
 	}
 	
+	/*
+	 * Empty Name
+	 */
+	public void testEmptyName() 
+	{
+		assertFalse(DataCheck.nameCheck(""));
+	}
+	
+	/*
+	 * Standard Name
+	 */
+	public void testStandardName() 
+	{
+		assertTrue(DataCheck.nameCheck("Payam"));
+	}
+	
+	
 }

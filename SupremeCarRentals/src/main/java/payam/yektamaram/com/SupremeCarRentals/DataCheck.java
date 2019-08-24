@@ -62,4 +62,15 @@ public class DataCheck {
 		return (license.matches("^[A-Z][0-9]{4}-[0-9]{5}-[0-9]{5}$") || license.matches("^[A-Z][0-9]{4}[0-9]{5}[0-9]{5}$")) ? true : false;
 	}
 
+	/**
+	 * Insurance number check.
+	 * 
+	 * @param String
+	 *            insurance the insurance
+	 * @return true, if successful
+	 */
+	public static boolean nameCheck(String name) 
+	{
+		return name.matches("^[a-z A-Z ,.'-]+$") ? true : false ;
+	}
 }

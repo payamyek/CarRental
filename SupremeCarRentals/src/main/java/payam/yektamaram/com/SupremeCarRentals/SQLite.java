@@ -85,7 +85,6 @@ public class SQLite {
 			rs.close();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -126,6 +125,79 @@ public class SQLite {
 		return userExists;
 	}
 
+	/* Counts the number of rows in the reservation table and returns 
+	 * a valid reservation number
+	 */
+	String reservationNumber()
+	{
+		
+		String reservationNumber="";
+		int identifier;
+		
+		try {
+			
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT reservation_number FROM reservation ORDER BY reservation_number DESC LIMIT 1;");
+			
+			if (rs.next())
+			{
+				reservationNumber = rs.getString("reservation_number");
+				identifier = Integer.parseInt(reservationNumber.substring((reservationNumber.indexOf("-") + 1)));
+				stmt.close();
+				rs.close();
+				reservationNumber =  "INT-" + (identifier + 1);
+			}
+			else if (!rs.next()) //Reservation table is empty
+			{
+				stmt.close();
+				rs.close();
+				reservationNumber = "INT-1";
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return reservationNumber;
+	}
+	
+	public void insertCustomer(String customerData[])
+	{	
+		int FNAME = 0, LNAME = 1, EMAIL = 2 , CREDIT = 3, INSUR = 4 , LICENSE = 11;
+		
+		try {
+			preparedStmt = con.prepareStatement("INSERT INTO customer values (?, ?, ?, ?, ?, ?)");
+			preparedStmt.setString(1, customerData[FNAME]);
+			preparedStmt.setString(2, customerData[LNAME]);
+			preparedStmt.setString(3, customerData[CREDIT]);
+			preparedStmt.setString(4, customerData[INSUR]);
+			preparedStmt.setString(5, customerData[LICENSE]);
+			preparedStmt.setString(6, customerData[EMAIL]);
+			// execute the preparedstatement
+			preparedStmt.execute();
+
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				rs = null;
+			}
+			if (preparedStmt != null) {
+				try {
+					preparedStmt.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				preparedStmt = null;
+			}
+		}	
+	}
+	
+	
 	private void insertCustomer(String firstName, String lastName, String creditCardNumber, String insuranceNumber, String driverLicense, String email) {
 		try {
 			// pass.setPassword("secretshh");
@@ -191,17 +263,18 @@ public class SQLite {
 
 	protected String [] getCarTypes(String carType)
 	{
-		String cars[] = new String[3];
+		String cars[] = new String[2];
 		int index = 0;
-		
-		
+			
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery("SELECT * FROM car WHERE type = '" + carType + "';");
 			
 			while(rs.next())
 			{
-				cars[index] = rs.getInt("year") + " - " + rs.getString("manufacturer") + " - " + rs.getString("model") + " - " + rs.getString("licensePlate");
+				String data = rs.getInt("year") + " - " + rs.getString("manufacturer") + " - " + rs.getString("model") + " - " + rs.getString("licensePlate");
+				//System.out.println(data);
+				cars[index] = data;
 				index++;
 			}
 			
@@ -228,7 +301,6 @@ public class SQLite {
 			if (rs.next() != false) {
 				if (rs.getString("password").equals(password)) {
 					check = true;
-
 				}
 			}
 
@@ -292,8 +364,7 @@ public class SQLite {
 		insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "HWUO 252", "ACTIVE");
 		insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "KJWW 213", "ACTIVE");
 		insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "ADDA 123", "ACTIVE");
-		insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "KJKH 123", "ACTIVE");
-		
+		insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "KJKH 123", "ACTIVE");	
 	}
 	
 	private void createReservationTable() {
@@ -310,9 +381,8 @@ public class SQLite {
 		}
 	}
 
-	private void insertReservation (String pickUp, String dropOff, String licensePlate, String reservationNumber) {
+	private void insertReservation(String pickUp, String dropOff, String licensePlate, String reservationNumber) {
 		try {
-
 			preparedStmt = con.prepareStatement("INSERT INTO reservation values (?, ?, ?, ?)");
 			preparedStmt.setString(1, pickUp);
 			preparedStmt.setString(2, dropOff);
@@ -397,4 +467,45 @@ public class SQLite {
 			}
 		}
 	}
+	
+	public String [] getCar(String licensePlate)
+	{
+		String carInfo[] = new String[5];
+			
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM car WHERE licensePlate = \"" + licensePlate + "\";");
+			
+			if(rs.next())
+			{
+				carInfo[0] = rs.getString("manufacturer");
+				carInfo[1] = rs.getString("model");
+				carInfo[2] = rs.getString("type");
+				carInfo[3] = String.valueOf(rs.getInt("odometer"));
+				carInfo[4] = String.valueOf(rs.getInt("year"));
+				stmt.close();
+				rs.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return carInfo;
+	}
+	
+	public static void main (String [] args)
+	{
+		SQLite db = new SQLite();
+		db.printTable("customer");
+		//String carInfo[] = db.getCar("AFYT 754");
+		//db.dropTable("reservation");
+		//db.createReservationTable();
+		//db.createCustomerTable();
+		//db.createCarTable();
+		//db.insertReservation("2019-09-27 12:30", "2019-09-31 12:30", "AFTY 123", "INT-423");
+		//db.dropTable("car");
+		//db.createCarTable();
+		//db.printTable("car");
+		//System.out.println("\n"+db.reservationNumber());
+	}
+	
 }

@@ -37,7 +37,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * <p>
  * <b>userField - </b>TextField for employee's user name.
  * <p>
- * <b>LOGIN_KEY - </b>Username that is valid program use.
+ * <b>LOGIN_KEY - </b>Username that is valid for program use.
  * <p>
  * <b>pickUpDatePicker - </b>An instance of the JDatePickerImpl Class that holds
  * the pick up date of a rental vehicle.
@@ -45,48 +45,43 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * <b>dropOffDatePicker- </b>An instance of the JDatePickerImpl Class that holds
  * the drop off date of a rental vehicle.
  * <p>
- * <b>emailAddress - </b>Holds customer's email address.
- * <p>
- * <b>firstName- </b>Holds customer's first name.
- * <p>
- * <b>lastName - </b>Holds customer's last name.
- * <p>
- * <b>creditCardNumber- </b>Holds customer's credit card number.
- * <p>
- * <b>lastName - </b>Holds customer's last name.
- * <p>
- * <b>insuranceNumber - </b>Holds customer's insurance number if insurance is
- * not bought.
- * <p>
- * <b>carTypeSelection - </b>Holds customer's car type choice.
- * <p>
- * <b>availableCars - </b>An instance of the JComboBox class which displays all
- * available cars.
- * <p>
- * <b>pickUpDate - </b>Holds the pick-up date of car rental.
- * <p>
- * <b>pickUpTime - </b>Holds the pick-up time of car rental.
- * <p>
- * <b>dropOffDate - </b>Holds the drop-off date of car rental.
- * <p>
- * <b>dropOffTime - </b>Holds the drop-off time of car rental.
- * <p>
- * <b>licensePlate - </b>Holds the license plate of car rental.
- * <p>
- * <b>driverLicense - </b>Holds the driver's license of car rental.
- * <p>
- * <b>searchReservationNumber - </b> Holds the reservation number the user is
- * searching for.
- * <p>
- * <b>dropOffLicensePlate - </b> Holds the license plate of the car.
- * <p>
  * <b>recordNumber - </b> Holds the number of records.
  * <p>
- * <b>c1 - </b> An instance of the Car class.
+ * <b>customerData - </b> String array that holds information regarding customer
  * <p>
- * <b>c2 - </b> An instance of the Customer class.
+ * <b>FNAME - </b> Constant for index of first name in customerData
+ * <p>
+ * <b>LNAME - </b> Constant for index of last name in customerData
+ * <p>
+ * <b>EMAIL - </b> Constant for index of email in customerData
+ * <p>
+ * <b>CREDIT - </b> Constant for index of credit card number in customerData
+ * <p>
+ * <b>INSUR - </b> Constant for index of insurance number in customerData
+ * <p>
+ * <b>TYPE - </b> Constant for index of car type in customerData
+ * <p>
+ * <b>PICKUPDATE - </b> Constant for index of rental pick up date in customerData
+ * <p>
+ * <b>PICKUPTIME - </b> Constant for index of rental pick up time in customerData
+ * <p>
+ * <b>DROPOFFDATE - </b> Constant for index of rental drop off date in customerData
+ * <p>
+ * <b>DROPOFFTIME - </b> Constant for index of rental drop off time in customerData
+ * <p>
+ * <b>PLATE - </b> Constant for index of license plate number in customerData
+ * <p>
+ * <b>LICENSE - </b> Constant for index of driver license number in customerData
+ * <p>
+ * <b>RESERVATION - </b> Constant for index of reservation number in customerData
+ * <p>
+ * <b>car - </b> An instance of the Car class.
+ * <p>
+ * <b>customer - </b> An instance of the Customer class.
  * <p>
  * <b>j1 - </b> An instance of the NewCarJTable class.
+ * <p>
+ * <b>db - </b> An instance of the SQLite class for access to database functionality
  * <p>
  * 
  * @version 2.4.0
@@ -97,36 +92,38 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 @SuppressWarnings("serial")
 public class ProgramInterface extends JPanel implements ActionListener {
 	
-	SQLite db = new SQLite();
+	SQLite db = new SQLite(); //Instance of Database
+	
+	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //date format to work with
 
-	String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime());
+	String timeStamp = df.format(Calendar.getInstance().getTime()); //Gets current time
 
-	NumberFormat formatter = NumberFormat.getCurrencyInstance();
+	NumberFormat formatter = NumberFormat.getCurrencyInstance(); 
+	
+	private JPasswordField passwordField; //get inputed password
 
-	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-	private JPasswordField passwordField_1;
-
-	private JTextField userField;
+	private JTextField userField; //get user name field
 
 	private final static String LOGIN_KEY = "Payam", PASSWORD_KEY = "wlmac2018";
 
 	private JDatePickerImpl pickUpDatePicker, dropOffDatePicker;
 
-	private String firstName, lastName, emailAddress, creditCardNumber, insuranceNumber, carTypeSelection, pickUpDate,
-			pickUpTime, dropOffDate, dropOffTime, licensePlate, driverLicense, searchReservationNumber,
-			dropOffLicensePlate, createdReservationNumber;
-
+	private String customerData[] = new String[13];
+	
+	public final int FNAME = 0, LNAME = 1, EMAIL = 2 , CREDIT = 3, INSUR = 4 , TYPE = 5, PICKUPDATE = 6, PICKUPTIME = 7,
+	DROPOFFDATE = 8, DROPOFFTIME = 9, PLATE = 10, LICENSE = 11, RESERVATION = 12;
+	
 	Date pickUpSelectedDate, dropOffSelectedDate, userPickUpDate, userDropOffDate;
 
-	@SuppressWarnings("rawtypes")
-	static JComboBox availableCars = new JComboBox();
+	static JComboBox availableCarsResult = new JComboBox();
 
 	int recordNumber;
+	
+	String carInfo[] = new String[5];
 
-	NewCar c1 = new NewCar();
+	NewCar car = new NewCar();
 
-	Customer c2 = new Customer();
+	Customer customer = new Customer();
 
 	NewCarJTable j1 = new NewCarJTable();
 
@@ -137,6 +134,19 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		setLayout(null);
 		loginMenu();
 	}
+	
+	
+	/**
+	 * Refreshes and repaints JPanel
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void refresh()
+	{		
+		removeAll();
+		revalidate();
+		repaint();
+	}
 
 	/**
 	 * Controls Program Flow
@@ -146,7 +156,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getActionCommand().equals("Login")) {
 			if (LOGIN_KEY.equals(userField.getText())
-					&& PASSWORD_KEY.equals(String.valueOf(passwordField_1.getPassword()))) {
+					&& PASSWORD_KEY.equals(String.valueOf(passwordField.getPassword()))) {
 				mainMenu();
 			} else {
 				JOptionPane.showMessageDialog(null, "Username and Password Combination Doesn't Exist",
@@ -208,17 +218,14 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * <p>
 	 */
 	public void loginMenu() {
-		removeAll();
-		revalidate();
-		repaint();
-
+		refresh(); 
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		JPanel panel = new JPanel();
 		panel.setBounds(0, -38, 320, 650);
 		panel.setBackground(new Color(51, 153, 255));
-		add(panel);
 		panel.setLayout(null);
+		add(panel);
 
 		JLabel logoImage = new JLabel("");
 		logoImage.setBounds(-35, 100, 493, 251);
@@ -237,11 +244,11 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		lblPassword.setBounds(372, 181, 136, 45);
 		add(lblPassword);
 
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setFont(new Font("Segoe UI Semilight", Font.PLAIN, 17));
-		passwordField_1.setBounds(372, 239, 187, 33);
-		passwordField_1.setText("");
-		add(passwordField_1);
+		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Segoe UI Semilight", Font.PLAIN, 17));
+		passwordField.setBounds(372, 239, 187, 33);
+		passwordField.setText("");
+		add(passwordField);
 
 		userField = new JTextField();
 		userField.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 18));
@@ -296,14 +303,14 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * @throws IOException
 	 */
 	public void mainMenu() {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
+		
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		JLabel logoImage = new JLabel("");
 		logoImage.setBounds(120, -40, 493, 251);
 		add(logoImage);
+		
 		Icon img = new ImageIcon(getClass().getClassLoader().getResource("CompanyLogo.png"));
 		logoImage.setIcon(img);
 
@@ -426,10 +433,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void rentCar() throws IOException, ParseException {
-		removeAll();
-		revalidate();
-		repaint();
-
+		refresh();
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(null);
 
@@ -500,27 +504,31 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 		JButton submitButton = new JButton("Search\r\n");
 		submitButton.setActionCommand("Search");
+		submitButton.setForeground(Color.WHITE);
+		submitButton.setBackground(Color.RED);
+		submitButton.setBounds(258, 386, 140, 38);
+		add(submitButton);
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Search") && !((Date) pickUpDatePicker.getModel().getValue() == null)
 						&& !((Date) dropOffDatePicker.getModel().getValue() == null)) {
 
-					carTypeSelection = String.valueOf(listOfCarTypes.getSelectedItem());
+					customerData[TYPE] = String.valueOf(listOfCarTypes.getSelectedItem()); //gets selected car type
 
-					LocalDate date = LocalDate.now();
+					LocalDate currentDate = LocalDate.now(); //instance of current date
 
 					pickUpSelectedDate = (Date) pickUpDatePicker.getModel().getValue();
 					dropOffSelectedDate = (Date) dropOffDatePicker.getModel().getValue();
 
-					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd"); 
 					SimpleDateFormat rf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-					pickUpDate = df.format(pickUpSelectedDate);
-					dropOffDate = df.format(dropOffSelectedDate);
+					customerData[PICKUPDATE] = df.format(pickUpSelectedDate); //get selected pick up date
+					customerData[DROPOFFDATE] = df.format(dropOffSelectedDate); //get selected drop off date
 
-					pickUpTime = String.valueOf(pickUpHourComboBox.getSelectedItem())
+					customerData[PICKUPTIME] = String.valueOf(pickUpHourComboBox.getSelectedItem()) //get selected pick up time
 							+ String.valueOf(pickUpMinuteComboBox.getSelectedItem());
-					dropOffTime = String.valueOf(dropOffHourComboBox.getSelectedItem())
+					customerData[DROPOFFTIME] = String.valueOf(dropOffHourComboBox.getSelectedItem()) //get selected drop off tie
 							+ String.valueOf(dropOffMinuteComboBox.getSelectedItem());
 
 					if (pickUpSelectedDate.after(dropOffSelectedDate)) {
@@ -528,28 +536,30 @@ public class ProgramInterface extends JPanel implements ActionListener {
 								"Invalid Date Range", JOptionPane.ERROR_MESSAGE);
 						pickUpDatePicker.getJFormattedTextField().setText("");
 						dropOffDatePicker.getJFormattedTextField().setText("");
-					} else if (pickUpDate.equals(dropOffDate)) {
+					} else if (customerData[PICKUPDATE].equals(customerData[DROPOFFDATE])) {
 						JOptionPane.showMessageDialog(null, "Rental Duration Must Be Longer Than 1 Day!",
 								"Invalid Date Range", JOptionPane.ERROR_MESSAGE);
 						pickUpDatePicker.getJFormattedTextField().setText("");
 						dropOffDatePicker.getJFormattedTextField().setText("");
 					} else if (pickUpSelectedDate
-							.before(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))) {
-						JOptionPane.showMessageDialog(null, "Rental Date Is Before Current Date!", "Invalid Date Range",
+							.before(Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))) {
+						JOptionPane.showMessageDialog(null, "Rental Date is Before Current Date!", "Invalid Date Range",
 								JOptionPane.ERROR_MESSAGE);
 						pickUpDatePicker.getJFormattedTextField().setText("");
 						dropOffDatePicker.getJFormattedTextField().setText("");
-					} else if (pickUpDate.equals(String.valueOf(date))) {
+					} else if (customerData[PICKUPDATE].equals(String.valueOf(currentDate))) {
 						JOptionPane.showMessageDialog(null, "Reservations Must Be Made A Day Before!",
 								"Invalid Date Range", JOptionPane.ERROR_MESSAGE);
 						pickUpDatePicker.getJFormattedTextField().setText("");
 						dropOffDatePicker.getJFormattedTextField().setText("");
 					} else {
 						try {
-							userPickUpDate = rf.parse(pickUpDate + " " + pickUpTime);
-							userDropOffDate = rf.parse(dropOffDate + " " + dropOffTime);
+							userPickUpDate = rf.parse(customerData[PICKUPDATE] + " " + customerData[PICKUPTIME]);
+							userDropOffDate = rf.parse(customerData[DROPOFFDATE] + " " + customerData[DROPOFFTIME]);
 							availableCars();
+							
 						} catch (ParseException e1) {
+							e1.printStackTrace();
 						}
 					}
 				} else {
@@ -563,10 +573,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 			}
 		});
 
-		submitButton.setForeground(Color.WHITE);
-		submitButton.setBackground(Color.RED);
-		submitButton.setBounds(258, 386, 140, 38);
-		add(submitButton);
+	
 	}
 
 	/**
@@ -613,9 +620,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * @throws IOException
 	 */
 	public void createRecord() throws IOException, ParseException {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
 
 		JLabel programTitle = new JLabel("Toronto Supreme Car Rentals");
 		programTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -697,76 +702,67 @@ public class ProgramInterface extends JPanel implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("createRecord")) {
 
-					firstName = firstNameInput.getText().trim();
-					lastName = lastNameInput.getText().trim();
-					emailAddress = emailAddressInput.getText().trim();
-					insuranceNumber = insuranceNumberInput.getText().trim();
-					creditCardNumber = creditCardNumberInput.getText().trim();
-					driverLicense = driverLicenseInput.getText().trim();
-
-					if (!firstName.matches("^[a-z A-Z ,.'-]+$")) {
+					customerData[FNAME] = firstNameInput.getText().trim();
+					customerData[LNAME] = lastNameInput.getText().trim();
+					customerData[EMAIL] = emailAddressInput.getText().trim();
+					customerData[INSUR] = insuranceNumberInput.getText().trim();
+					customerData[CREDIT] = creditCardNumberInput.getText().trim();
+					customerData[LICENSE] = driverLicenseInput.getText().trim();
+					if (!DataCheck.nameCheck(customerData[FNAME])) {
 						JOptionPane.showMessageDialog(null, "First Name Can Only Contain Letters!", "Input Error",
 								JOptionPane.ERROR_MESSAGE);
 						firstNameInput.setText("");
 						firstNameInput.requestFocus();
-					} else if (!lastName.matches("^[a-z A-Z ,.'-]+$")) {
+					} else if (!DataCheck.nameCheck(customerData[LNAME])) {
 						JOptionPane.showMessageDialog(null, "Last Name Can Only Contain Letters!", "Input Error",
 								JOptionPane.ERROR_MESSAGE);
 						lastNameInput.setText("");
 						lastNameInput.requestFocus();
-					} else if (DataCheck.creditCardCheck(creditCardNumber) == false) {
+					} else if (!DataCheck.creditCardCheck(customerData[CREDIT])) {
 						JOptionPane.showMessageDialog(null,
 								"Credit Card Number Is Invalid! Enter mastercard or visa number!", "Input Error",
 								JOptionPane.ERROR_MESSAGE);
 						creditCardNumberInput.setText("");
 						creditCardNumberInput.requestFocus();
-					} else if (DataCheck.emailCheck(emailAddress) == false) {
+					} else if (!DataCheck.emailCheck(customerData[EMAIL])) {
 						JOptionPane.showMessageDialog(null, "Email Address Is Invalid", "Input Error",
 								JOptionPane.ERROR_MESSAGE);
 						emailAddressInput.setText("");
 						emailAddressInput.requestFocus();
-					} else if (DataCheck.insuranceNumberCheck(insuranceNumber) == false
-							&& !insuranceNumber.equals("")) {
+					} else if (!DataCheck.insuranceNumberCheck(customerData[INSUR])
+							&& !customerData[INSUR].equals("")) {
 						JOptionPane.showMessageDialog(null, "Insurance Number Is Invalid!", "Input Error",
 								JOptionPane.ERROR_MESSAGE);
 						insuranceNumberInput.setText("");
 						insuranceNumberInput.requestFocus();
-					} else if (DataCheck.driverLicenseNumberCheck(driverLicense) == false) {
+					} else if (!DataCheck.driverLicenseNumberCheck(customerData[LICENSE])) {
 						JOptionPane.showMessageDialog(null, "Driver License Number Is Invalid!", "Input Error",
 								JOptionPane.ERROR_MESSAGE);
 						driverLicenseInput.setText("");
 						driverLicenseInput.requestFocus();
 					} else {
-						String carMake2 = "", carModel2 = "";
+						/*String carMake2 = "", carModel2 = "";
 						for (int x = 0; x < 36; x++) {
 							if (NewCarJTable.data[x][5].equals(licensePlate)) {
 								carMake2 = (String) NewCarJTable.data[x][2];
 								carModel2 = (String) NewCarJTable.data[x][3];
 							}
-						}
+						}*/
 
-						Customer c = new Customer(firstName, lastName, emailAddress, driverLicense, insuranceNumber,
-								creditCardNumber, userPickUpDate, userDropOffDate, carTypeSelection, carMake2,
-								carModel2, licensePlate, "none", 0);
-						createdReservationNumber = c.getReservationNumber();
-						try {
-							Customer.saveToDatabase();
-							Customer.customerDatabase.clear();
-						} catch (IOException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
-						}
+						db.insertCustomer(customerData);
+						customerData[RESERVATION] = db.reservationNumber(); 
+				
 						JOptionPane.showMessageDialog(null, "Reservation Succesfully Made", "Booked",
 								JOptionPane.INFORMATION_MESSAGE);
 
-						if (insuranceNumber.equals("")) {
+						if (customerData[INSUR].equals("")) {
 							JOptionPane.showMessageDialog(null,
 									"Insurance Number Not Provided. Customer Opted For Full-Coverage at $20/day.",
 									"Full Coverage", JOptionPane.INFORMATION_MESSAGE);
-						} else if (!insuranceNumber.equals("")) {
-							insuranceNumber = "N/A";
+						} else if (!customerData[INSUR].equals("")) {
+							customerData[INSUR] = "N/A";
 							JOptionPane.showMessageDialog(null, "Customer Opted To Use Their Own Insurance Coverage.",
-									"No Coverage", JOptionPane.INFORMATION_MESSAGE);
+									"Personal Coverage", JOptionPane.INFORMATION_MESSAGE);
 						}
 						carInfoReview();
 					}
@@ -806,12 +802,9 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * 
 	 * @throws ParseException
 	 */
-	@SuppressWarnings({ "static-access", "unchecked" })
 	public void availableCars() throws ParseException {
-
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
+		System.out.print("Hey vars");
 
 		JLabel companyNameLabel = new JLabel("Toronto Supreme Car Rentals");
 		companyNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -826,7 +819,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		carTypeLabel.setBounds(33, 129, 108, 39);
 		add(carTypeLabel);
 
-		JLabel customerCarType = new JLabel(carTypeSelection);
+		JLabel customerCarType = new JLabel(customerData[TYPE]);
 		customerCarType.setFont(new Font("Segoe UI Semilight", Font.PLAIN, 21));
 		customerCarType.setBounds(153, 129, 266, 39);
 		add(customerCarType);
@@ -836,17 +829,16 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		lblAvailableCars.setBounds(32, 207, 175, 39);
 		add(lblAvailableCars);
 
-		availableCars.setBounds(195, 216, 425, 28);
+		availableCarsResult.setBounds(195, 216, 425, 28);
 		
-		SQLite db = new SQLite();
-		
-		for (String car : db.getCarTypes(carTypeSelection))
+		for (String car : db.getCarTypes(customerData[TYPE]))
 		{
-			if (car != null)
-				availableCars.addItem(car);
+			if (car != null) {
+				availableCarsResult.addItem(car); //add car to combo box
+			}
 		}
 		
-		add(availableCars);
+		add(availableCarsResult);
 
 		JButton btnReserve = new JButton("Reserve");
 		btnReserve.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -854,42 +846,15 @@ public class ProgramInterface extends JPanel implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
 				if (e.getActionCommand().equals("Reserve")) {
+					
 					String valueTemp = "Available";
+					customerData[PLATE] = String.valueOf(availableCarsResult.getSelectedItem());
 
-					licensePlate = String.valueOf(availableCars.getSelectedItem());
-
-					int temp = StringUtils.ordinalIndexOf(licensePlate, "-", 3);
-					licensePlate = licensePlate.substring(temp + 2, licensePlate.length());
-
-					String value = "Booked";
-					try {
-						File inputFile = new File("newCarDatabase.csv");
-						File tempFile = new File("myTempFile.csv");
-
-						BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-						BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
-						String lineToRemove = valueTemp;
-						String currentLine;
-
-						while ((currentLine = reader.readLine()) != null) {
-							String trimmedLine = currentLine.trim();
-							if (trimmedLine.contains(lineToRemove) && trimmedLine.contains(licensePlate)) {
-								writer.write(currentLine.replace(lineToRemove, value)
-										+ System.getProperty("line.separator"));
-							} else {
-								writer.write(currentLine + System.getProperty("line.separator"));
-							}
-						}
-						writer.close();
-						reader.close();
-						rename(tempFile.getName(), inputFile.getName());
-					} catch (IOException d) {
-					}
+					int temp = StringUtils.ordinalIndexOf(customerData[PLATE], "-", 3);
+					customerData[PLATE] = customerData[PLATE].substring(temp + 2, customerData[PLATE].length()); //Get license plate of chosen car 	
 					try {
 						createRecord();
 					} catch (IOException | ParseException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -933,9 +898,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * @throws ParseException
 	 */
 	public void customerInfoReview() throws ParseException {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
 
 		JLabel lblCustomerInformation = new JLabel("Customer Information");
 		lblCustomerInformation.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1031,9 +994,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * @throws ParseException
 	 */
 	public void carInfoReview() {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
 
 		JLabel lblCarInformation = new JLabel("Car Information");
 		lblCarInformation.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1118,6 +1079,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		mileageText.setBounds(208, 290, 290, 27);
 		add(mileageText);
 
+		/*
 		for (int x = 0; x < 36; x++) {
 			if (NewCarJTable.data[x][5].equals(licensePlate)) {
 				manufacturerText.setText("" + NewCarJTable.data[x][2]);
@@ -1128,7 +1090,16 @@ public class ProgramInterface extends JPanel implements ActionListener {
 				numberOfScratchesText.setText("" + NewCarJTable.data[x][8]);
 				mileageText.setText("" + NewCarJTable.data[x][4]);
 			}
-		}
+		}*/
+		
+		carInfo = db.getCar(customerData[PLATE]);
+		
+		manufacturerText.setText(carInfo[0]);
+		modelText.setText(carInfo[1]);
+		carTypeText.setText(carInfo[2]);
+		mileageText.setText(carInfo[3]);
+		numberOfScratchesText.setText("N/A"); //try to remove later one
+		accidentsText.setText("N/A"); //try to remove later on
 
 		JButton button = new JButton("Next\r\n");
 		button.setActionCommand("Next Page");
@@ -1172,9 +1143,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * <p>
 	 */
 	public void reservationInfoReview() {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
 
 		JLabel lblReservationSummary = new JLabel("Reservation Summary");
 		lblReservationSummary.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1285,7 +1254,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		});
 		add(btnOk);
 
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
+		/*for (int x = 0; x < Customer.customerDatabase.size(); x++) {
 			if (Customer.customerDatabase.get(x).getLicensePlate().equals(licensePlate)) {
 				String priceDay = formatter
 						.format(Customer.dailyPrice((Customer.customerDatabase.get(x).getCarType())));
@@ -1302,7 +1271,23 @@ public class ProgramInterface extends JPanel implements ActionListener {
 				totalPriceText.setText(formatter.format(estimatedPrice));
 				holdAmountText.setText(formatter.format(Customer.holdCaculator(userPickUpDate, userDropOffDate)));
 			}
+		}*/
+		
+		String priceDay = formatter.format(Customer.dailyPrice(carInfo[2]));
+		double estimatedPrice = 0;
+		
+		if (customerData[INSUR].equals(""))
+		{
+			estimatedPrice = Customer.estimatedPriceCalculator(carInfo[2], userPickUpDate, userDropOffDate, true);
 		}
+		else
+		{
+			estimatedPrice = Customer.estimatedPriceCalculator(carInfo[2], userPickUpDate, userDropOffDate, false);
+		}
+		
+		pricePerDayText.setText(priceDay);
+		totalPriceText.setText(formatter.format(estimatedPrice));
+		holdAmountText.setText(formatter.format(Customer.holdCaculator(userPickUpDate, userDropOffDate)));
 	}
 
 	/**
@@ -1354,11 +1339,13 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		firstName.setFont(PDType1Font.TIMES_ROMAN, 10);
 		firstName.setNonStrokingColor(Color.BLACK);
 		firstName.newLineAtOffset(100, 588);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
+		
+		/*for (int x = 0; x < Customer.customerDatabase.size(); x++) {
 			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
 				firstName.showText(String.valueOf(Customer.customerDatabase.get(x).getFirstName()));
 			}
-		}
+		}*/
+		firstName.showText(customerData[FNAME]);
 		firstName.endText();
 		firstName.close();
 
@@ -1368,11 +1355,12 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		lastName.setFont(PDType1Font.TIMES_ROMAN, 10);
 		lastName.setNonStrokingColor(Color.BLACK);
 		lastName.newLineAtOffset(100, 573);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
+		/*for (int x = 0; x < Customer.customerDatabase.size(); x++) {
 			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
 				lastName.showText(String.valueOf(Customer.customerDatabase.get(x).getLastName()));
 			}
-		}
+		}*/
+		lastName.showText(customerData[LNAME]);
 		lastName.endText();
 		lastName.close();
 
@@ -1382,11 +1370,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		email.setFont(PDType1Font.TIMES_ROMAN, 10);
 		email.setNonStrokingColor(Color.BLACK);
 		email.newLineAtOffset(115, 559);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				email.showText(String.valueOf(Customer.customerDatabase.get(x).getEmailAddress()));
-			}
-		}
+		email.showText(customerData[EMAIL]);
 		email.endText();
 		email.close();
 
@@ -1396,11 +1380,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		creditCard.setFont(PDType1Font.TIMES_ROMAN, 10);
 		creditCard.setNonStrokingColor(Color.BLACK);
 		creditCard.newLineAtOffset(111, 545);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				creditCard.showText(String.valueOf(Customer.customerDatabase.get(x).getCreditCardNumber()));
-			}
-		}
+		creditCard.showText(customerData[CREDIT]);
 		creditCard.endText();
 		creditCard.close();
 
@@ -1410,11 +1390,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		insurance.setFont(PDType1Font.TIMES_ROMAN, 10);
 		insurance.setNonStrokingColor(Color.BLACK);
 		insurance.newLineAtOffset(104, 531);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				insurance.showText(String.valueOf(Customer.customerDatabase.get(x).getInsuranceNumber()));
-			}
-		}
+		insurance.showText(customerData[INSUR]);
 		insurance.endText();
 		insurance.close();
 
@@ -1424,11 +1400,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		driverLicense.setFont(PDType1Font.TIMES_ROMAN, 10);
 		driverLicense.setNonStrokingColor(Color.BLACK);
 		driverLicense.newLineAtOffset(121, 518);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				driverLicense.showText(String.valueOf(Customer.customerDatabase.get(x).getLicenseNumber()));
-			}
-		}
+		driverLicense.showText(customerData[LICENSE]);
 		driverLicense.endText();
 		driverLicense.close();
 
@@ -1438,11 +1410,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		pickUp.setFont(PDType1Font.TIMES_ROMAN, 10);
 		pickUp.setNonStrokingColor(Color.BLACK);
 		pickUp.newLineAtOffset(238, 573);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				pickUp.showText(df.format(Customer.customerDatabase.get(x).getUserPickUpDate()));
-			}
-		}
+		pickUp.showText(customerData[PICKUPDATE]);
 		pickUp.endText();
 		pickUp.close();
 
@@ -1452,11 +1420,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		dropOff.setFont(PDType1Font.TIMES_ROMAN, 10);
 		dropOff.setNonStrokingColor(Color.BLACK);
 		dropOff.newLineAtOffset(238, 545);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				dropOff.showText(df.format(Customer.customerDatabase.get(x).getUserDropOffDate()));
-			}
-		}
+		dropOff.showText(customerData[DROPOFFDATE]);
 		dropOff.endText();
 		dropOff.close();
 
@@ -1466,12 +1430,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		rentalTime.setFont(PDType1Font.TIMES_ROMAN, 10);
 		rentalTime.setNonStrokingColor(Color.BLACK);
 		rentalTime.newLineAtOffset(238, 518);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				rentalTime.showText(Customer.durationCalcuator(Customer.customerDatabase.get(x).getUserPickUpDate(),
-						Customer.customerDatabase.get(x).getUserDropOffDate()) + " day(s)");
-			}
-		}
+		rentalTime.showText(Customer.durationCalcuator(userPickUpDate, userDropOffDate) + " day(s)");
 		rentalTime.endText();
 		rentalTime.close();
 
@@ -1481,11 +1440,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		carMake.setFont(PDType1Font.TIMES_ROMAN, 10);
 		carMake.setNonStrokingColor(Color.BLACK);
 		carMake.newLineAtOffset(460, 588);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				carMake.showText(String.valueOf(Customer.customerDatabase.get(x).getCarMake()));
-			}
-		}
+		carMake.showText(carInfo[0]);
 		carMake.endText();
 		carMake.close();
 
@@ -1495,11 +1450,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		carModel.setFont(PDType1Font.TIMES_ROMAN, 10);
 		carModel.setNonStrokingColor(Color.BLACK);
 		carModel.newLineAtOffset(460, 573);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				carModel.showText(String.valueOf(Customer.customerDatabase.get(x).getCarModel()));
-			}
-		}
+		carModel.showText(carInfo[1]);
 		carModel.endText();
 		carModel.close();
 
@@ -1509,11 +1460,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		carYear.setFont(PDType1Font.TIMES_ROMAN, 10);
 		carYear.setNonStrokingColor(Color.BLACK);
 		carYear.newLineAtOffset(460, 559);
-		for (int x = 0; x < 36; x++) {
-			if (NewCarJTable.data[x][5].equals(licensePlate)) {
-				carYear.showText(String.valueOf(NewCarJTable.data[x][1]));
-			}
-		}
+		carYear.showText(carInfo[5]);
 		carYear.endText();
 		carYear.close();
 
@@ -1523,13 +1470,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		carPlate.setFont(PDType1Font.TIMES_ROMAN, 10);
 		carPlate.setNonStrokingColor(Color.BLACK);
 		carPlate.newLineAtOffset(460, 545);
-		for (int x = 0; x < Customer.customerDatabase.size(); x++) {
-			if (Customer.customerDatabase.get(x).getReservationNumber().equals(createdReservationNumber)) {
-				{
-					carPlate.showText(String.valueOf(Customer.customerDatabase.get(x).getLicensePlate()));
-				}
-			}
-		}
+		carPlate.showText(customerData[PLATE]);
 		carPlate.endText();
 		carPlate.close();
 
@@ -1539,11 +1480,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		carType.setFont(PDType1Font.TIMES_ROMAN, 10);
 		carType.setNonStrokingColor(Color.BLACK);
 		carType.newLineAtOffset(460, 531);
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
-			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
-				carType.showText(String.valueOf(Customer.customerDatabase.get(x1).getCarType()));
-			}
-		}
+		carType.showText(carInfo[2]);
 		carType.endText();
 		carType.close();
 
@@ -1553,7 +1490,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		branchAddress.setFont(PDType1Font.TIMES_ROMAN, 10);
 		branchAddress.setNonStrokingColor(Color.BLACK);
 		branchAddress.newLineAtOffset(328, 686);
-		branchAddress.showText(String.valueOf(createdReservationNumber));
+		branchAddress.showText(customerData[RESERVATION]);
 		branchAddress.endText();
 		branchAddress.close();
 
@@ -1573,13 +1510,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		rentalDuration1.setFont(PDType1Font.TIMES_ROMAN, 10);
 		rentalDuration1.setNonStrokingColor(Color.BLACK);
 		rentalDuration1.newLineAtOffset(510, 462);
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
-			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
-				rentalDuration1
-						.showText(Customer.durationCalcuator(Customer.customerDatabase.get(x1).getUserPickUpDate(),
-								Customer.customerDatabase.get(x1).getUserDropOffDate()) + " day(s)");
-			}
-		}
+		rentalDuration1.showText(Customer.durationCalcuator(userPickUpDate, userDropOffDate) + " day(s)");
 		rentalDuration1.endText();
 		rentalDuration1.close();
 
@@ -1591,12 +1522,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		dailyCost.setFont(PDType1Font.TIMES_ROMAN, 10);
 		dailyCost.setNonStrokingColor(Color.BLACK);
 		dailyCost.newLineAtOffset(409, 462);
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
-			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
-				dailyCost.showText(
-						formatter.format((Customer.dailyPrice(Customer.customerDatabase.get(x1).getCarType()))));
-			}
-		}
+		dailyCost.showText(formatter.format(Customer.dailyPrice(carInfo[2])));
 		dailyCost.endText();
 		dailyCost.close();
 
@@ -1606,7 +1532,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		insuranceCost.setFont(PDType1Font.TIMES_ROMAN, 9);
 		insuranceCost.setNonStrokingColor(Color.BLACK);
 		insuranceCost.newLineAtOffset(327, 462);
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
+		/*for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
 			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
 				if (Customer.customerDatabase.get(x1).getInsuranceNumber().equals("")) {
 					insuranceCost.showText(formatter
@@ -1616,6 +1542,14 @@ public class ProgramInterface extends JPanel implements ActionListener {
 					insuranceCost.showText("Personal Coverage");
 				}
 			}
+		}*/
+		if (customerData[INSUR].equals(""))
+		{
+			insuranceCost.showText(formatter.format(Customer.durationCalcuator(userPickUpDate , userDropOffDate) * 20 ));
+		}
+		else
+		{
+			insuranceCost.showText("Personal Coverage");
 		}
 		insuranceCost.endText();
 		insuranceCost.close();
@@ -1626,7 +1560,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		totalCost.setFont(PDType1Font.TIMES_ROMAN, 10);
 		totalCost.setNonStrokingColor(Color.BLACK);
 		totalCost.newLineAtOffset(219, 462);
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
+		/*for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
 			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
 				double estimatedPrice = 0;
 				if (Customer.customerDatabase.get(x1).getInsuranceNumber().equals("")) {
@@ -1638,7 +1572,17 @@ public class ProgramInterface extends JPanel implements ActionListener {
 				}
 				totalCost.showText(formatter.format(estimatedPrice));
 			}
+		}*/
+		double estimatedPrice = 0;
+		if (customerData[INSUR].equals(""))
+		{
+			estimatedPrice = Customer.estimatedPriceCalculator(carInfo[2], userPickUpDate , userDropOffDate, true);
 		}
+		else
+		{
+			estimatedPrice = Customer.estimatedPriceCalculator(carInfo[2], userPickUpDate , userDropOffDate, false);
+		}
+		totalCost.showText(formatter.format(estimatedPrice));
 		totalCost.endText();
 		totalCost.close();
 
@@ -1649,7 +1593,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		estimatedTotalCost.setNonStrokingColor(Color.BLACK);
 		estimatedTotalCost.newLineAtOffset(408, 442);
 
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
+		/*for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
 			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
 				double estimatedPrice = 0;
 				if (Customer.customerDatabase.get(x1).getInsuranceNumber().equals("")) {
@@ -1661,7 +1605,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 				}
 				estimatedTotalCost.showText(formatter.format(estimatedPrice));
 			}
-		}
+		}*/
+		estimatedTotalCost.showText(formatter.format(estimatedPrice));
 		estimatedTotalCost.endText();
 		estimatedTotalCost.close();
 
@@ -1671,14 +1616,14 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		holdAmount.setFont(PDType1Font.TIMES_ROMAN, 10);
 		holdAmount.setNonStrokingColor(Color.BLACK);
 		holdAmount.newLineAtOffset(408, 420);
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
+		/*for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
 			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
 				holdAmount.showText(
 						formatter.format(Customer.holdCaculator(Customer.customerDatabase.get(x1).getUserPickUpDate(),
 								Customer.customerDatabase.get(x1).getUserDropOffDate())));
 			}
-		}
-
+		}*/
+		holdAmount.showText(formatter.format(Customer.holdCaculator(userPickUpDate, userDropOffDate)));
 		holdAmount.endText();
 		holdAmount.close();
 
@@ -1688,13 +1633,14 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		totalDueNow.setFont(PDType1Font.TIMES_ROMAN, 10);
 		totalDueNow.setNonStrokingColor(Color.WHITE);
 		totalDueNow.newLineAtOffset(408, 400);
-		for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
+		/*for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
 			if (Customer.customerDatabase.get(x1).getReservationNumber().equals(createdReservationNumber)) {
 				totalDueNow.showText(
 						formatter.format(Customer.holdCaculator(Customer.customerDatabase.get(x1).getUserPickUpDate(),
 								Customer.customerDatabase.get(x1).getUserDropOffDate())));
 			}
-		}
+		}*/
+		totalDueNow.showText(formatter.format(Customer.holdCaculator(userPickUpDate, userDropOffDate)));
 		totalDueNow.endText();
 		totalDueNow.close();
 
@@ -2133,10 +2079,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void dropOffCar() {
-		removeAll();
-		revalidate();
-		repaint();
-
+		refresh();
+		
 		for (int x = 0; x < ReservationJTable.data.length; x++) {
 			if (ReservationJTable.data[x][12].equals(searchReservationNumber)) {
 				dropOffLicensePlate = (String) ReservationJTable.data[x][11];
@@ -2271,9 +2215,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * <p>
 	 */
 	public void searchReservation() {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
 
 		JLabel label = new JLabel("Toronto Supreme Car Rentals");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2345,9 +2287,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * <p>
 	 */
 	public void dropOffCarInfoReview() {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
 
 		JLabel lblCarInformation = new JLabel("Car Information");
 		lblCarInformation.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2512,9 +2452,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void dropOffReservationInfoReview() throws IOException {
-		removeAll();
-		revalidate();
-		repaint();
+		refresh();
 
 		double damagePrice = 0, distancePrice = 0, insurancePrice = 0, dailyPrice = 0;
 		int numberOfScratches = 0, distanceTravelled = 0;
