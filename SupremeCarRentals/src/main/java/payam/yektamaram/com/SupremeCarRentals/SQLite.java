@@ -218,7 +218,8 @@ public class SQLite {
 					System.out.print(" Credit Card: " + rs.getString("credit_card_number"));
 					System.out.print(" Insurance: " + rs.getString("insurance_number"));
 					System.out.print(" Driver License: " + rs.getString("driver_license"));
-					System.out.println(" Email: " + rs.getString("email"));
+					System.out.print(" Email: " + rs.getString("email"));
+					System.out.println(" Reservation Number: " + rs.getString("reservation_number"));
 				}
 			} else if (table.equals("car")) {
 				while (rs.next()) {
@@ -394,44 +395,6 @@ public class SQLite {
 		}
 	}
 
-	/**
-	 * Insert customer.
-	 *
-	 * @param firstName the first name
-	 * @param lastName the last name
-	 * @param creditCardNumber the credit card number
-	 * @param insuranceNumber the insurance number
-	 * @param driverLicense the driver license
-	 * @param email the email
-	 */
-	private void insertCustomer(String firstName, String lastName, String creditCardNumber, String insuranceNumber,
-			String driverLicense, String email) {
-		try {
-			// pass.setPassword("secretshh");
-			preparedStmt = con.prepareStatement("INSERT INTO customer values (?, ?, ?, ?, ?, ?)");
-			preparedStmt.setString(1, firstName);
-			preparedStmt.setString(2, lastName);
-			preparedStmt.setString(3, creditCardNumber);
-			preparedStmt.setString(4, insuranceNumber);
-			preparedStmt.setString(5, driverLicense);
-			preparedStmt.setString(6, email);
-			// execute the preparedstatement
-			preparedStmt.execute();
-
-		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-		} finally {
-			if (preparedStmt != null) {
-				try {
-					preparedStmt.close();
-				} catch (SQLException sqlEx) {
-				} // ignore
-				preparedStmt = null;
-			}
-		}
-	}
 
 	/**
 	 * Delete customer.
@@ -747,6 +710,50 @@ public class SQLite {
 			}
 		}
 		return carInfo;
+	}
+
+	
+	/**
+	 * Gets the customer.
+	 *
+	 * @param licensePlate the license plate
+	 * @return the customer
+	 */
+	public String[] getCustomer(String reservationNumber) {
+		String customerInfo[] = new String[7];
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM customer WHERE reservation_number = \"" + reservationNumber + "\";");
+			
+			if (rs.next()) {
+				customerInfo[0] = rs.getString("first_name");
+				customerInfo[1] = rs.getString("last_name");
+				customerInfo[2] = rs.getString("credit_card_number");
+				customerInfo[3] = rs.getString("insurance_number");
+				customerInfo[4] = rs.getString("driver_license");
+				customerInfo[5] = rs.getString("email");
+				customerInfo[6] = rs.getString("reservation_number");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				rs = null;
+			}
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				stmt = null;
+			}
+		}
+		return customerInfo;
 	}
 
 	

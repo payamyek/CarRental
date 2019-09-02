@@ -103,6 +103,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	String dropOffReservationData [];
 	
 	String dropOffCarInfo[];
+	
+	String dropOffCustomerInfo[];
 
 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // date format to work with
 
@@ -902,6 +904,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		add(btnReserve);
 	}
 
+	
+	
 	/**
 	 * Customer info review.
 	 * 
@@ -933,6 +937,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * 
 	 * @throws ParseException
 	 */
+	/*
 	public void customerInfoReview() throws ParseException {
 		refresh();
 
@@ -1002,7 +1007,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		});
 		nextButton.setBounds(267, 384, 117, 39);
 		add(nextButton);
-	}
+	} */
 
 	/**
 	 * Shows information about car that has been booked.
@@ -1719,6 +1724,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
 		@SuppressWarnings("unused")
 		double damagePrice = 0, distancePrice = 0, insurancePrice = 0, dailyPrice = 0;
+		String dropOffCustomerInfo[] = db.getCustomer(searchReservationNumber);
 
 		/*
 		 * for (int x1 = 0; x1 < NewCar.carDatabase.size(); x1++) { if
@@ -1729,8 +1735,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * type = String.valueOf(NewCar.carDatabase.get(x1).getType()); } }
 		 */
 
-		int numberOfScratches = Integer.parseInt(carInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]);
-		int distanceTravelled = Integer.parseInt(carInfo[CarConstants.ODOMETER.getValue()]);
+		int numberOfScratches = Integer.parseInt(dropOffCarInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]);
+		int distanceTravelled = Integer.parseInt(dropOffCarInfo[CarConstants.ODOMETER.getValue()]);
 		String type = carInfo[CarConstants.TYPE.getValue()];
 
 		File file1 = new File("/SupremeCarRental/SupremeCarRentals/dropOffInvoiceTemplate.pdf");
@@ -1751,7 +1757,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * firstName1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getFirstName())); break; } }
 		 */
-		firstName1.showText(customerData[CustomerConstants.FNAME.getValue()]);
+		firstName1.showText(dropOffCustomerInfo[0]);
 		firstName1.endText();
 		firstName1.close();
 
@@ -1768,7 +1774,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * lastName1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getLastName())); break; } }
 		 */
-		lastName1.showText(customerData[CustomerConstants.LNAME.getValue()]);
+		lastName1.showText(dropOffCustomerInfo[1]);
 		lastName1.endText();
 		lastName1.close();
 
@@ -1785,7 +1791,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * email1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getEmailAddress())); break; } }
 		 */
-		email1.showText(customerData[CustomerConstants.EMAIL.getValue()]);
+		email1.showText(dropOffCustomerInfo[5]);
 		email1.endText();
 		email1.close();
 
@@ -1802,7 +1808,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * creditCard1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getCreditCardNumber())); break; } }
 		 */
-		creditCard1.showText(customerData[CustomerConstants.CREDIT.getValue()]);
+		creditCard1.showText(dropOffCustomerInfo[2]);
 		creditCard1.endText();
 		creditCard1.close();
 
@@ -1819,7 +1825,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * insurance1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getInsuranceNumber())); break; } }
 		 */
-		insurance1.showText(customerData[CustomerConstants.INSURANCE.getValue()]);
+		insurance1.showText(dropOffCustomerInfo[3]);
 		insurance1.endText();
 		insurance1.close();
 
@@ -1836,7 +1842,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * driverLicense1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getLicenseNumber())); break; } }
 		 */
-		driverLicense1.showText(customerData[CustomerConstants.LICENSE.getValue()]);
+		driverLicense1.showText(dropOffCustomerInfo[4]);
 		driverLicense1.endText();
 		driverLicense1.close();
 
@@ -1853,6 +1859,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * pickUp1.showText(df.format(Customer.customerDatabase.get(x).getUserPickUpDate
 		 * ())); break; } }
 		 */
+		pickUp1.showText(dropOffReservationData[ReservationConstants.PICKUP.getValue()]);
 		pickUp1.endText();
 		pickUp1.close();
 
@@ -1869,6 +1876,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * dropOff1.showText(df.format(Customer.customerDatabase.get(x).
 		 * getUserDropOffDate())); break; } }
 		 */
+		dropOff1.showText(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]);
 		dropOff1.endText();
 		dropOff1.close();
 
@@ -1887,6 +1895,14 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * Customer.customerDatabase.get(x).getUserDropOffDate()) + " day(s)"); break; }
 		 * }
 		 */
+		try {
+			rentalTime1.showText(Customer.durationCalcuator(
+					rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+					rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		rentalTime1.endText();
 		rentalTime1.close();
 
@@ -1903,6 +1919,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * carMake1.showText(String.valueOf(Customer.customerDatabase.get(x).getCarMake(
 		 * ))); break; } }
 		 */
+		carMake1.showText(dropOffCarInfo[CarConstants.MANUFACTURER.getValue()]);
 		carMake1.endText();
 		carMake1.close();
 
@@ -1919,6 +1936,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * carModel1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getCarModel())); break; } }
 		 */
+		carModel1.showText(dropOffCarInfo[CarConstants.MODEL.getValue()]);
 		carModel1.endText();
 		carModel1.close();
 
@@ -1933,6 +1951,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * (NewCarJTable.data[x][5].equals(dropOffLicensePlate)) {
 		 * carYear1.showText(String.valueOf(NewCarJTable.data[x][1])); break; } }
 		 */
+		carYear1.showText(dropOffCarInfo[CarConstants.YEAR.getValue()]);
 		carYear1.endText();
 		carYear1.close();
 
@@ -1949,6 +1968,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * carPlate1.showText(String.valueOf(Customer.customerDatabase.get(x).
 		 * getLicensePlate())); break; } }
 		 */
+		carPlate1.showText(dropOffCarInfo[CarConstants.LICENSEPLATE.getValue()]);
 		carPlate1.endText();
 		carPlate1.close();
 
@@ -1965,6 +1985,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * carType1.showText(String.valueOf(Customer.customerDatabase.get(x).getCarType(
 		 * ))); break; } }
 		 */
+		carType1.showText(dropOffCarInfo[CarConstants.TYPE.getValue()]);
 		carType1.endText();
 		carType1.close();
 
@@ -2002,6 +2023,13 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * getUserPickUpDate(), Customer.customerDatabase.get(x).getUserDropOffDate()) +
 		 * " day(s)"); break; } }
 		 */
+		try {
+			rentalDuration1.showText(Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
+					rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		rentalDuration1.endText();
 		rentalDuration1.close();
 
@@ -2022,6 +2050,20 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * * 20)); break; } else { insuranceCost1.showText("Personal Coverage"); break;
 		 * } } }
 		 */
+		if (dropOffCustomerInfo[3].equals(""))
+		{
+			try {
+				insuranceCost1.showText(formatter.format(Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
+						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			insuranceCost1.showText("Personal Coverage");
+		}
 		insuranceCost1.endText();
 		insuranceCost1.close();
 
@@ -2038,6 +2080,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * Customer.dailyPrice(Customer.customerDatabase.get(x1).getCarType());
 		 * dailyCost1.showText(formatter.format(dailyPrice)); break; } }
 		 */
+		dailyCost1.showText(formatter.format(Customer.dailyPrice(dropOffCarInfo[CarConstants.TYPE.getValue()])));
 		dailyCost1.endText();
 		dailyCost1.close();
 
