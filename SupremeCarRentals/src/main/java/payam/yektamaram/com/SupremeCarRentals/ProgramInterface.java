@@ -99,6 +99,10 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 public class ProgramInterface extends JPanel implements ActionListener {
 
 	SQLite db = new SQLite(); // Instance of Database
+	
+	String dropOffReservationData [];
+	
+	String dropOffCarInfo[];
 
 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // date format to work with
 
@@ -2391,22 +2395,31 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		mileageText.setBounds(208, 290, 290, 27);
 		add(mileageText);
 
-		for (int x = 0; x < 36; x++) {
+		/*for (int x = 0; x < 36; x++) {
 			if (NewCarJTable.data[x][5].equals(dropOffLicensePlate)) {
 				manufacturerText.setText("" + NewCarJTable.data[x][2]);
 				modelText.setText("" + NewCarJTable.data[x][3]);
 				carTypeText.setText("" + NewCarJTable.data[x][0]);
 				repairsNeededText.setText("" + NewCarJTable.data[x][6]);
 			}
-		}
+		}*/
+		
+		manufacturerText.setText(dropOffCarInfo[CarConstants.MANUFACTURER.getValue()]);
+		modelText.setText(dropOffCarInfo[CarConstants.MODEL.getValue()]);
+		carTypeText.setText(dropOffCarInfo[CarConstants.TYPE.getValue()]);
+		repairsNeededText.setText(dropOffCarInfo[CarConstants.ACCIDENTS.getValue()]);
 
+		/*
 		for (int x = 0; x < 36; x++) {
 			if (NewCar.carDatabase.get(x).getLicensePlate().equals(dropOffLicensePlate)) {
 				numberOfScratchesText.setText(NewCar.carDatabase.get(x).getNumberOfScratches());
 				accidentsText.setText(NewCar.carDatabase.get(x).getAccidents());
 				mileageText.setText(NewCar.carDatabase.get(x).getKm());
 			}
-		}
+		}*/
+		
+		numberOfScratchesText.setText(dropOffCarInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]);
+		accidentsText.setText(dropOffCarInfo[CarConstants.ACCIDENTS.getValue()]);
 
 		JButton btnSaveAndPrint = new JButton("Save and Print Invoice");
 		btnSaveAndPrint.setActionCommand("Print");
@@ -2436,7 +2449,6 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Next Page")) {
-
 					mainMenu();
 				}
 			}
@@ -2472,13 +2484,12 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	public void dropOffReservationInfoReview() throws IOException {
 		refresh();
 
-		double damagePrice = 0, distancePrice = 0, insurancePrice = 0, dailyPrice = 0;
 		int numberOfScratches = 0, distanceTravelled = 0;
-		String type = "", insuranceCost = "";
+		String insuranceCost = "";
 		double estimatedPrice = 0;
 
-		String carInfo[] = db.getCar(dropOffLicensePlate);
-		String reservationData[] = db.getReservation(searchReservationNumber);
+		dropOffCarInfo = db.getCar(dropOffLicensePlate);
+		dropOffReservationData = db.getReservation(searchReservationNumber);
 
 		/*
 		 * for (int x1 = 0; x1 < NewCar.carDatabase.size(); x1++) { if
@@ -2506,11 +2517,11 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * distanceTravelled, false); } } }
 		 */
 
-		if (reservationData[ReservationConstants.RESERVATION_NUMBER.getValue()].equals("")) {
+		if (dropOffReservationData[ReservationConstants.RESERVATION_NUMBER.getValue()].equals("")) {
 			try {
 				estimatedPrice = Customer.finalPriceCalculator(carInfo[CarConstants.TYPE.getValue()],
-						rf.parse(reservationData[ReservationConstants.PICKUP.getValue()]),
-						rf.parse(reservationData[ReservationConstants.DROPOFF.getValue()]),
+						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
 						Integer.parseInt(carInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]),
 						Integer.parseInt(carInfo[CarConstants.ODOMETER.getValue()]), true);
 			} catch (NumberFormatException | ParseException e1) {
@@ -2520,8 +2531,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		} else {
 			try {
 				estimatedPrice = Customer.finalPriceCalculator(carInfo[CarConstants.TYPE.getValue()],
-						rf.parse(reservationData[ReservationConstants.PICKUP.getValue()]),
-						rf.parse(reservationData[ReservationConstants.DROPOFF.getValue()]),
+						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
 						Integer.parseInt(carInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]),
 						Integer.parseInt(carInfo[CarConstants.ODOMETER.getValue()]), false);
 			} catch (NumberFormatException | ParseException e1) {
@@ -2535,8 +2546,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 			try {
 				insuranceCost = formatter.format(
 						Customer.durationCalcuator(
-						rf.parse(reservationData[ReservationConstants.PICKUP.getValue()]), 
-						rf.parse(reservationData[ReservationConstants.DROPOFF.getValue()])) * 20);
+						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
+						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20);
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -2660,12 +2671,12 @@ public class ProgramInterface extends JPanel implements ActionListener {
 			}
 		}*/
 
-		pickUpDateText.setText(df.format(reservationData[ReservationConstants.PICKUP.getValue()]));
-		dropOffDateText.setText(df.format(reservationData[ReservationConstants.DROPOFF.getValue()]));
+		pickUpDateText.setText(df.format(dropOffReservationData[ReservationConstants.PICKUP.getValue()]));
+		dropOffDateText.setText(df.format(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]));
 		try {
 			durationText.setText("" + Customer.durationCalcuator(
-					rf.parse(reservationData[ReservationConstants.PICKUP.getValue()]), 
-					rf.parse(reservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+					rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
+					rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
