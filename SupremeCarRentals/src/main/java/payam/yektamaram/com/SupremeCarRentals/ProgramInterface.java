@@ -836,7 +836,6 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 */
 	public void availableCars() throws ParseException {
 		refresh();
-		System.out.print("Hey vars");
 
 		JLabel companyNameLabel = new JLabel("Toronto Supreme Car Rentals");
 		companyNameLabel.setHorizontalAlignment(SwingConstants.CENTER);

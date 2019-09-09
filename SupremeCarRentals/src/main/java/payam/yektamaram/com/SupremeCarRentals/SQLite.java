@@ -9,19 +9,15 @@ import java.util.Arrays;
  */
 public class SQLite {
 
-	/** The con. */
 	/* Database Connection */
 	Connection con = null;
 
-	/** The stmt. */
 	/* Allows for the execution of basic queries */
 	Statement stmt = null;
 
-	/** The rs. */
 	/* The result of the query */
 	ResultSet rs = null;
 
-	/** The prepared stmt. */
 	/* Precompiled SQL statement. */
 	PreparedStatement preparedStmt = null;
 
@@ -69,7 +65,7 @@ public class SQLite {
 
 				stmt = con.createStatement();
 				sql = "CREATE TABLE car (type TEXT, year INT, manufacturer TEXT, model TEXT,"
-						+ "odometer INT,licensePlate TEXT, status TEXT, numberOfScratches INT, accidents TEXT);";
+						+ "odometer INT, licensePlate TEXT, gasLevel INT);";
 				stmt.executeUpdate(sql);
 				stmt.close();
 
@@ -85,30 +81,30 @@ public class SQLite {
 				}
 			}
 
-			insertCar("Economy", 2019, "Toyota", "Prius", 0, "AFYT 754", "ACTIVE", 0, "None");
-			insertCar("Economy", 2019, "Toyota", "Prius", 0, "EFLT 656", "ACTIVE", 0, "None");
-			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "LFRF 541", "ACTIVE", 0, "None");
-			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "PKKT 254", "ACTIVE", 0, "None");
-			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "RLYT 252", "ACTIVE", 0, "None");
-			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "LLYT 532", "ACTIVE", 0, "None");
-			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "IFSA 442", "ACTIVE", 0, "None");
-			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "ILKS 545", "ACTIVE", 0, "None");
-			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "ISSA 442", "ACTIVE", 0, "None");
-			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "IURE 325", "ACTIVE", 0, "None");
-			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "FFSA 442", "ACTIVE", 0, "None");
-			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "IRRS 115", "ACTIVE", 0, "None");
-			insertCar("Premium", 2019, "Audi", "A3", 0, "FFFT 123", "ACTIVE", 0, "None");
-			insertCar("Premium", 2019, "Audi", "A3", 0, "OERE 141", "ACTIVE", 0, "None");
-			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASAA 442", "ACTIVE", 0, "None");
-			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASQQ 123", "ACTIVE", 0, "None");
-			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "MONE 442", "ACTIVE", 0, "None");
-			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "PEOP 123", "ACTIVE", 0, "None");
-			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "AAAA 442", "ACTIVE", 0, "None");
-			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "QQQQ 123", "ACTIVE", 0, "None");
-			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "HWUO 252", "ACTIVE", 0, "None");
-			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "KJWW 213", "ACTIVE", 0, "None");
-			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "ADDA 123", "ACTIVE", 0, "None");
-			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "KJKH 123", "ACTIVE", 0, "None");
+			insertCar("Economy", 2019, "Toyota", "Prius", 0, "AFYT 754", 100);
+			insertCar("Economy", 2019, "Toyota", "Prius", 0, "EFLT 656", 100);
+			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "LFRF 541", 100);
+			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "PKKT 254", 100);
+			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "RLYT 252", 100);
+			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "LLYT 532", 100);
+			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "IFSA 442", 100);
+			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "ILKS 545", 100);
+			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "ISSA 442", 100);
+			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "IURE 325", 100);
+			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "FFSA 442", 100);
+			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "IRRS 115", 100);
+			insertCar("Premium", 2019, "Audi", "A3", 0, "FFFT 123", 100);
+			insertCar("Premium", 2019, "Audi", "A3", 0, "OERE 141", 100);
+			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASAA 442", 100);
+			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASQQ 123", 100);
+			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "MONE 442", 100);
+			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "PEOP 123", 100);
+			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "AAAA 442", 100);
+			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "QQQQ 123", 100);
+			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "HWUO 252", 100);
+			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "KJWW 213", 100);
+			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "ADDA 123", 100);
+			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "KJKH 123", 100);
 		}
 	}
 	
@@ -634,8 +630,7 @@ public class SQLite {
 	 * @param numberOfScratches the number of scratches
 	 * @param accidents the accidents
 	 */
-	private void insertCar(String type, int year, String manufacturer, String model, int odometer, String licensePlate,
-			String status, int numberOfScratches, String accidents) {
+	private void insertCar(String type, int year, String manufacturer, String model, int odometer, String licensePlate, int gasLevel) {
 		try {
 
 			preparedStmt = con.prepareStatement("INSERT INTO car values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -645,9 +640,7 @@ public class SQLite {
 			preparedStmt.setString(4, model);
 			preparedStmt.setInt(5, odometer);
 			preparedStmt.setString(6, licensePlate);
-			preparedStmt.setString(7, status);
-			preparedStmt.setInt(8, numberOfScratches);
-			preparedStmt.setString(9, accidents);
+			preparedStmt.setInt(7, gasLevel);
 
 			// execute the preparedstatement
 			preparedStmt.execute();
@@ -917,7 +910,7 @@ public class SQLite {
 	public static void main(String[] args) {
 		SQLite db = new SQLite();
 		//db.printTable("customer");
-		db.printTable("reservation");
+		//db.printTable("reservation");
 		//db.cleanDatabases();
 		//db.setUpDatabases();
 		// db.printTable("car");
