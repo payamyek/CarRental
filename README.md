@@ -9,4 +9,4 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 
 # How To Use
 
-To login to the application use the following credentials: Username = "Admin" and Password = "password123"
+To login into the application use the following credentials: Username = "Admin" and Password = "password123"
