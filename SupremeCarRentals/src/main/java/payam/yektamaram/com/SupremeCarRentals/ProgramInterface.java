@@ -118,7 +118,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 	private JTextField userField; // get user name field
 
-	private final static String LOGIN_KEY = "Payam", PASSWORD_KEY = "wlmac2018";
+	private final static String LOGIN_KEY = "Admin", PASSWORD_KEY = "password123";
 
 	private JDatePickerImpl pickUpDatePicker, dropOffDatePicker;
 
@@ -2714,8 +2714,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 			}
 		}*/
 
-		pickUpDateText.setText(df.format(dropOffReservationData[ReservationConstants.PICKUP.getValue()]));
-		dropOffDateText.setText(df.format(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]));
+		pickUpDateText.setText(dropOffReservationData[ReservationConstants.PICKUP.getValue()]);
+		dropOffDateText.setText(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]);
 		try {
 			durationText.setText("" + Customer.durationCalcuator(
 					rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 

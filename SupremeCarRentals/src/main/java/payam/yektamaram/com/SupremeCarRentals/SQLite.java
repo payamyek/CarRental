@@ -883,7 +883,7 @@ public class SQLite {
 					"SELECT * FROM customer WHERE reservation_number = \"" + reservationNumber + "\";");
 
 			if (rs.next()) {
-				if (rs.getString("insurance").equals(""))
+				if (rs.getString("insurance_number").equals(""))
 				{
 					coverage = false;
 				}
