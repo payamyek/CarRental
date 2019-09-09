@@ -5,3 +5,8 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 
 # License
 [MIT](https://github.com/payamyek/SupremeCarRentals/blob/master/LICENSE)
+
+
+# How To Use
+
+To login to the application use the following credentials: Username = "Admin" and Password = "password123"
