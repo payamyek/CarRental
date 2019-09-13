@@ -50,8 +50,8 @@ public class NewCarJTable extends JFrame {
 	protected static Object[][] data;
 
 	/** The column names. */
-	private String[] columnNames = { "Type", "Year", "Manufacturer", "Model", "KM", "License Plate", "Repairs Needed",
-			"Accidents", "# Of Scratches" };
+	private String[] columnNames = { "Type", "Year", "Manufacturer", "Model", "Odometer", "License Plate", "Fuel Capacity",
+			"Fuel Level"};
 
 	/** The table model. */
 	@SuppressWarnings("unused")
@@ -60,12 +60,6 @@ public class NewCarJTable extends JFrame {
 	/** The table. */
 	@SuppressWarnings("unused")
 	private JTable table;
-
-	/** The my list. */
-	private NewCarData myList;
-
-	/** The instanced Car class. */
-	NewCar c1 = new NewCar();
 
 	private JTextField jtfFilter = new JTextField();
 
@@ -78,9 +72,8 @@ public class NewCarJTable extends JFrame {
 	public NewCarJTable() {
 		setSize(1100, 690);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		myList = new NewCarData();
-		NewCarData.readFromCSV("newCarDatabase.csv");
-		data = myList.convert2Data();
+	
+		data = SQLite.getCarTableData();
 
 		DefaultTableModel model = new DefaultTableModel(data, columnNames);
 		JTable table = new JTable(model);
@@ -89,7 +82,7 @@ public class NewCarJTable extends JFrame {
 		table.setRowSorter(rowSorter);
 
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(new JLabel("Search for a record:"), BorderLayout.WEST);
+		panel.add(new JLabel(" Search for a record : "), BorderLayout.WEST);
 		panel.add(jtfFilter, BorderLayout.CENTER);
 
 		setLayout(new BorderLayout());

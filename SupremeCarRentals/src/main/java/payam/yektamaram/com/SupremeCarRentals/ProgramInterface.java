@@ -99,13 +99,15 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 public class ProgramInterface extends JPanel implements ActionListener {
 
 	SQLite db = new SQLite(); // Instance of Database
-	
-	String dropOffReservationData [];
-	
+
+	String dropOffReservationData[];
+
 	String dropOffCarInfo[];
-	
+
 	String dropOffCustomerInfo[];
 
+	int distanceTravelled;
+	
 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // date format to work with
 
 	String timeStamp = df.format(Calendar.getInstance().getTime()); // Gets current time
@@ -134,7 +136,11 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 	int recordNumber;
 
-	String carInfo[] = new String[9];
+	int dropOffFuelDifference;
+
+	final double gasPrice = 1.29;
+
+	String carInfo[] = new String[8];
 
 	NewCar car = new NewCar();
 
@@ -148,7 +154,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	public ProgramInterface() {
 		setLayout(null);
 		loginMenu();
-		db.cleanDatabases();
+		// db.cleanDatabases();
 		db.setUpDatabases();
 	}
 
@@ -256,6 +262,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("Segoe UI Semilight", Font.BOLD, 24));
+
 		lblPassword.setBounds(372, 181, 136, 45);
 		add(lblPassword);
 
@@ -333,13 +340,13 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		rentCarButton.setForeground(Color.WHITE);
 		rentCarButton.setBackground(new Color(255, 0, 0));
 		rentCarButton.addActionListener(this);
-		rentCarButton.setBounds(226, 187, 162, 50);
+		rentCarButton.setBounds(226, 200, 162, 50);
 		add(rentCarButton);
 
 		JButton dropOffCarButton = new JButton("Drop Off Car");
 		dropOffCarButton.setForeground(Color.WHITE);
 		dropOffCarButton.setBackground(Color.RED);
-		dropOffCarButton.setBounds(226, 236, 162, 50);
+		dropOffCarButton.setBounds(226, 206, 162, 50);
 		dropOffCarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Drop Off Car")) {
@@ -781,9 +788,10 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 						customerData[CustomerConstants.RESERVATION_NUMBER.getValue()] = db.reservationNumber();
 						db.insertCustomer(customerData);
-						db.insertReservation(df.format(userPickUpDate), df.format(userDropOffDate), customerData[CustomerConstants.LICENSE.getValue()], 
+						db.insertReservation(df.format(userPickUpDate), df.format(userDropOffDate),
+								customerData[CustomerConstants.PLATE.getValue()],
 								customerData[CustomerConstants.RESERVATION_NUMBER.getValue()]);
-						
+
 						JOptionPane.showMessageDialog(null, "Reservation Succesfully Made", "Booked",
 								JOptionPane.INFORMATION_MESSAGE);
 
@@ -903,8 +911,6 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		add(btnReserve);
 	}
 
-	
-	
 	/**
 	 * Customer info review.
 	 * 
@@ -937,76 +943,59 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	 * @throws ParseException
 	 */
 	/*
-	public void customerInfoReview() throws ParseException {
-		refresh();
-
-		JLabel lblCustomerInformation = new JLabel("Customer Information");
-		lblCustomerInformation.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCustomerInformation.setFont(new Font("Gadugi", Font.PLAIN, 28));
-		lblCustomerInformation.setBounds(0, 23, 632, 57);
-		add(lblCustomerInformation);
-
-		JLabel numberOfReservationsLabel = new JLabel("Number of Reservations: ");
-		numberOfReservationsLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		numberOfReservationsLabel.setBounds(12, 119, 233, 27);
-		add(numberOfReservationsLabel);
-
-		JTextField numberOfReservationText = new JTextField();
-		numberOfReservationText.setEditable(false);
-		numberOfReservationText.setText(String.valueOf(InfoJTable.getFreq(InfoJTable.data, driverLicense)));
-		numberOfReservationText.setBounds(244, 122, 64, 27);
-		add(numberOfReservationText);
-		numberOfReservationText.setColumns(10);
-
-		JLabel carPreferenceLabel = new JLabel("Car Preference: \r\n");
-		carPreferenceLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		carPreferenceLabel.setBounds(320, 119, 167, 27);
-		add(carPreferenceLabel);
-
-		JTextField carPreferenceText = new JTextField();
-		carPreferenceText.setEditable(false);
-		carPreferenceText.setText(String.valueOf(InfoJTable.getFreq(InfoJTable.data, driverLicense)));
-		carPreferenceText.setColumns(10);
-		carPreferenceText.setBounds(475, 122, 145, 27);
-		add(carPreferenceText);
-
-		JTextArea pastProblemsText = new JTextArea();
-		pastProblemsText.setEditable(false);
-		pastProblemsText.setRows(3);
-		pastProblemsText.setBounds(159, 260, 410, 84);
-		add(pastProblemsText);
-
-		JLabel pastProblemsLabel = new JLabel("Past Problems:");
-		pastProblemsLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		pastProblemsLabel.setBounds(12, 255, 167, 27);
-		add(pastProblemsLabel);
-
-		JLabel averageRatingLabel = new JLabel("Average Rating:");
-		averageRatingLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		averageRatingLabel.setBounds(12, 184, 233, 27);
-		add(averageRatingLabel);
-
-		JTextField averageRatingText = new JTextField();
-		averageRatingText.setEditable(false);
-		averageRatingText.setColumns(10);
-		averageRatingText.setBounds(181, 189, 97, 27);
-		add(averageRatingText);
-
-		JButton nextButton = new JButton("Next\r\n");
-		nextButton.setActionCommand("Next");
-		nextButton.setForeground(Color.WHITE);
-		nextButton.setBackground(Color.RED);
-		nextButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		nextButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand().equals("Next")) {
-					carInfoReview();
-				}
-			}
-		});
-		nextButton.setBounds(267, 384, 117, 39);
-		add(nextButton);
-	} */
+	 * public void customerInfoReview() throws ParseException { refresh();
+	 * 
+	 * JLabel lblCustomerInformation = new JLabel("Customer Information");
+	 * lblCustomerInformation.setHorizontalAlignment(SwingConstants.CENTER);
+	 * lblCustomerInformation.setFont(new Font("Gadugi", Font.PLAIN, 28));
+	 * lblCustomerInformation.setBounds(0, 23, 632, 57);
+	 * add(lblCustomerInformation);
+	 * 
+	 * JLabel numberOfReservationsLabel = new JLabel("Number of Reservations: ");
+	 * numberOfReservationsLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	 * numberOfReservationsLabel.setBounds(12, 119, 233, 27);
+	 * add(numberOfReservationsLabel);
+	 * 
+	 * JTextField numberOfReservationText = new JTextField();
+	 * numberOfReservationText.setEditable(false);
+	 * numberOfReservationText.setText(String.valueOf(InfoJTable.getFreq(InfoJTable.
+	 * data, driverLicense))); numberOfReservationText.setBounds(244, 122, 64, 27);
+	 * add(numberOfReservationText); numberOfReservationText.setColumns(10);
+	 * 
+	 * JLabel carPreferenceLabel = new JLabel("Car Preference: \r\n");
+	 * carPreferenceLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	 * carPreferenceLabel.setBounds(320, 119, 167, 27); add(carPreferenceLabel);
+	 * 
+	 * JTextField carPreferenceText = new JTextField();
+	 * carPreferenceText.setEditable(false);
+	 * carPreferenceText.setText(String.valueOf(InfoJTable.getFreq(InfoJTable.data,
+	 * driverLicense))); carPreferenceText.setColumns(10);
+	 * carPreferenceText.setBounds(475, 122, 145, 27); add(carPreferenceText);
+	 * 
+	 * JTextArea pastProblemsText = new JTextArea();
+	 * pastProblemsText.setEditable(false); pastProblemsText.setRows(3);
+	 * pastProblemsText.setBounds(159, 260, 410, 84); add(pastProblemsText);
+	 * 
+	 * JLabel pastProblemsLabel = new JLabel("Past Problems:");
+	 * pastProblemsLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	 * pastProblemsLabel.setBounds(12, 255, 167, 27); add(pastProblemsLabel);
+	 * 
+	 * JLabel averageRatingLabel = new JLabel("Average Rating:");
+	 * averageRatingLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	 * averageRatingLabel.setBounds(12, 184, 233, 27); add(averageRatingLabel);
+	 * 
+	 * JTextField averageRatingText = new JTextField();
+	 * averageRatingText.setEditable(false); averageRatingText.setColumns(10);
+	 * averageRatingText.setBounds(181, 189, 97, 27); add(averageRatingText);
+	 * 
+	 * JButton nextButton = new JButton("Next\r\n");
+	 * nextButton.setActionCommand("Next"); nextButton.setForeground(Color.WHITE);
+	 * nextButton.setBackground(Color.RED); nextButton.setFont(new Font("Tahoma",
+	 * Font.PLAIN, 18)); nextButton.addActionListener(new ActionListener() { public
+	 * void actionPerformed(ActionEvent e) { if
+	 * (e.getActionCommand().equals("Next")) { carInfoReview(); } } });
+	 * nextButton.setBounds(267, 384, 117, 39); add(nextButton); }
+	 */
 
 	/**
 	 * Shows information about car that has been booked.
@@ -1044,108 +1033,85 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 		JLabel lblManufacturer = new JLabel("Manufacturer: ");
 		lblManufacturer.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblManufacturer.setBounds(22, 107, 130, 27);
+		lblManufacturer.setBounds(22, 127, 133, 27);
 		add(lblManufacturer);
 
 		JTextField manufacturerText = new JTextField();
 		manufacturerText.setEditable(false);
 		manufacturerText.setColumns(10);
-		manufacturerText.setBounds(164, 109, 153, 27);
+		manufacturerText.setBounds(165, 129, 153, 27);
 		add(manufacturerText);
 
 		JLabel lblModel = new JLabel("Model: ");
 		lblModel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblModel.setBounds(344, 107, 77, 27);
+		lblModel.setBounds(344, 127, 77, 27);
 		add(lblModel);
 
 		JTextField modelText = new JTextField();
 		modelText.setEditable(false);
 		modelText.setColumns(10);
-		modelText.setBounds(418, 109, 158, 27);
+		modelText.setBounds(418, 129, 158, 27);
 		add(modelText);
 
 		JLabel lblCarType = new JLabel("Car Type:");
 		lblCarType.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblCarType.setBounds(22, 174, 93, 27);
+		lblCarType.setBounds(22, 194, 93, 27);
 		add(lblCarType);
 
 		JTextField carTypeText = new JTextField();
 		carTypeText.setEditable(false);
 		carTypeText.setColumns(10);
-		carTypeText.setBounds(164, 176, 153, 27);
+		carTypeText.setBounds(164, 196, 153, 27);
 		add(carTypeText);
 
-		JLabel lblNumberOfScratches = new JLabel("Number Of Scratches: ");
-		lblNumberOfScratches.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNumberOfScratches.setBounds(344, 174, 210, 27);
-		add(lblNumberOfScratches);
+		JLabel lblFuelLevel = new JLabel("Fuel Level:");
+		lblFuelLevel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblFuelLevel.setBounds(344, 194, 210, 27);
+		add(lblFuelLevel);
 
-		JTextField numberOfScratchesText = new JTextField();
-		numberOfScratchesText.setEditable(false);
-		numberOfScratchesText.setColumns(10);
-		numberOfScratchesText.setBounds(550, 176, 57, 27);
-		add(numberOfScratchesText);
-
-		JLabel lblRepairsNeeded = new JLabel("Repairs Needed:");
-		lblRepairsNeeded.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblRepairsNeeded.setBounds(22, 241, 163, 27);
-		add(lblRepairsNeeded);
-
-		JTextField repairsNeededText = new JTextField();
-		repairsNeededText.setEditable(false);
-		repairsNeededText.setColumns(10);
-		repairsNeededText.setBounds(187, 243, 311, 27);
-		add(repairsNeededText);
-
-		JLabel lblAccidents = new JLabel("Accidents: ");
-		lblAccidents.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAccidents.setBounds(22, 337, 108, 27);
-		add(lblAccidents);
-
-		JTextArea accidentsText = new JTextArea();
-		accidentsText.setRows(3);
-		accidentsText.setEditable(false);
-		accidentsText.setBounds(144, 339, 410, 57);
-		add(accidentsText);
+		JTextField fuelLevelText = new JTextField();
+		fuelLevelText.setEditable(false);
+		fuelLevelText.setColumns(10);
+		fuelLevelText.setBounds(450, 196, 57, 27);
+		add(fuelLevelText);
 
 		JLabel lblMileage = new JLabel("Odometer Reading:");
 		lblMileage.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblMileage.setBounds(22, 288, 210, 27);
+		lblMileage.setBounds(22, 258, 210, 27);
 		add(lblMileage);
 
 		JTextField mileageText = new JTextField();
 		mileageText.setEditable(false);
 		mileageText.setColumns(10);
-		mileageText.setBounds(208, 290, 290, 27);
+		mileageText.setBounds(208, 260, 100, 27);
 		add(mileageText);
 
-		/*
-		 * for (int x = 0; x < 36; x++) { if
-		 * (NewCarJTable.data[x][5].equals(licensePlate)) { manufacturerText.setText(""
-		 * + NewCarJTable.data[x][2]); modelText.setText("" + NewCarJTable.data[x][3]);
-		 * carTypeText.setText("" + NewCarJTable.data[x][0]);
-		 * repairsNeededText.setText("" + NewCarJTable.data[x][6]);
-		 * accidentsText.setText("" + NewCarJTable.data[x][7]);
-		 * numberOfScratchesText.setText("" + NewCarJTable.data[x][8]);
-		 * mileageText.setText("" + NewCarJTable.data[x][4]); } }
-		 */
+		JLabel lblFuelCapacity = new JLabel("Fuel Capacity:");
+		lblFuelCapacity.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblFuelCapacity.setBounds(344, 258, 210, 27);
+		add(lblFuelCapacity);
+
+		JTextField fuelCapacityText = new JTextField();
+		fuelCapacityText.setEditable(false);
+		fuelCapacityText.setColumns(10);
+		fuelCapacityText.setBounds(475, 260, 57, 27);
+		add(fuelCapacityText);
 
 		carInfo = db.getCar(customerData[CustomerConstants.PLATE.getValue()]);
 
 		manufacturerText.setText(carInfo[CarConstants.MANUFACTURER.getValue()]);
 		modelText.setText(carInfo[CarConstants.MODEL.getValue()]);
 		carTypeText.setText(carInfo[CarConstants.TYPE.getValue()]);
-		mileageText.setText(carInfo[CarConstants.ODOMETER.getValue()]);
-		numberOfScratchesText.setText(carInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]);
-
-		accidentsText.setText("N/A"); // try to remove later on
+		mileageText.setText(carInfo[CarConstants.ODOMETER.getValue()] + " KM(s)");
+		fuelLevelText.setText(carInfo[CarConstants.FUELLEVEL.getValue()] + " L");
+		fuelCapacityText.setText(carInfo[CarConstants.FUELCAPACITY.getValue()] + " L");
 
 		JButton button = new JButton("Next\r\n");
 		button.setActionCommand("Next Page");
 		button.setForeground(Color.WHITE);
 		button.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		button.setBackground(Color.RED);
-		button.setBounds(270, 398, 117, 39);
+		button.setBounds(250, 368, 117, 39);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Next Page")) {
@@ -1734,7 +1700,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * type = String.valueOf(NewCar.carDatabase.get(x1).getType()); } }
 		 */
 
-		int numberOfScratches = Integer.parseInt(dropOffCarInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]);
+		// int numberOfScratches =
+		// Integer.parseInt(dropOffCarInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]);
 		int distanceTravelled = Integer.parseInt(dropOffCarInfo[CarConstants.ODOMETER.getValue()]);
 		String type = carInfo[CarConstants.TYPE.getValue()];
 
@@ -1895,9 +1862,9 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * }
 		 */
 		try {
-			rentalTime1.showText(Customer.durationCalcuator(
-					rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-					rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+			rentalTime1.showText(
+					Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+							rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2023,8 +1990,9 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * " day(s)"); break; } }
 		 */
 		try {
-			rentalDuration1.showText(Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
-					rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+			rentalDuration1.showText(
+					Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+							rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2049,18 +2017,16 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 * * 20)); break; } else { insuranceCost1.showText("Personal Coverage"); break;
 		 * } } }
 		 */
-		if (dropOffCustomerInfo[3].equals(""))
-		{
+		if (dropOffCustomerInfo[3].equals("")) {
 			try {
-				insuranceCost1.showText(formatter.format(Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
+				insuranceCost1.showText(formatter.format(Customer.durationCalcuator(
+						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
 						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		else
-		{
+		} else {
 			insuranceCost1.showText("Personal Coverage");
 		}
 		insuranceCost1.endText();
@@ -2128,7 +2094,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		damageCost1.setFont(PDType1Font.TIMES_ROMAN, 10);
 		damageCost1.setNonStrokingColor(Color.BLACK);
 		damageCost1.newLineAtOffset(110, 462);
-		damagePrice = numberOfScratches * 10.00;
+		// damagePrice = numberOfScratches * 10.00;
 		damageCost1.showText(formatter.format(damagePrice));
 		damageCost1.endText();
 		damageCost1.close();
@@ -2173,13 +2139,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	public void dropOffCar() {
 		refresh();
 
-		/*
-		 * for (int x = 0; x < ReservationJTable.data.length; x++) { if
-		 * (ReservationJTable.data[x][12].equals(searchReservationNumber)) {
-		 * dropOffLicensePlate = (String) ReservationJTable.data[x][11]; } }
-		 */
-
 		dropOffLicensePlate = db.getReservationLicensePlate(searchReservationNumber);
+		dropOffCarInfo = db.getCar(dropOffLicensePlate);
 
 		JLabel lblTorontoSupremeCar = new JLabel("Toronto Supreme Car Rentals");
 		lblTorontoSupremeCar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2188,75 +2149,76 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		lblTorontoSupremeCar.setBounds(0, 29, 632, 63);
 		add(lblTorontoSupremeCar);
 
-		JLabel lblOdometerReading = new JLabel("Distance Travelled (KM):");
+		JLabel lblOdometerReading = new JLabel("Distance Travelled (KM) :");
 		lblOdometerReading.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblOdometerReading.setBounds(18, 124, 250, 27);
+		lblOdometerReading.setBounds(22, 124, 250, 27);
 		add(lblOdometerReading);
 
 		final JTextField odometerInput = new JTextField();
 		odometerInput.setColumns(10);
-		odometerInput.setBounds(240, 126, 100, 27);
+		odometerInput.setBounds(262, 126, 100, 27);
 		add(odometerInput);
 
-		JLabel lblNumberOfSratches = new JLabel("# Of New Sratches:");
-		lblNumberOfSratches.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNumberOfSratches.setBounds(359, 124, 200, 27);
-		add(lblNumberOfSratches);
+		JLabel lblFuelCapacity = new JLabel("Fuel Capacity:");
+		lblFuelCapacity.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblFuelCapacity.setBounds(22, 194, 200, 27);
+		add(lblFuelCapacity);
 
-		final JTextField numberOfScratchezInput = new JTextField();
-		numberOfScratchezInput.setColumns(10);
-		numberOfScratchezInput.setBounds(551, 126, 59, 27);
-		add(numberOfScratchezInput);
+		final JTextField fuelCapacityInput = new JTextField();
+		fuelCapacityInput.setEditable(false);
+		fuelCapacityInput.setColumns(10);
+		fuelCapacityInput.setBounds(155, 196, 55, 27);
+		fuelCapacityInput.setText(dropOffCarInfo[CarConstants.FUELCAPACITY.getValue()] + " L");
+		add(fuelCapacityInput);
 
-		JLabel lblProblems = new JLabel("Customer Problem: ");
-		lblProblems.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblProblems.setBounds(266, 278, 200, 27);
-		add(lblProblems);
+		JLabel lblFuelLevel = new JLabel("Fuel Level :");
+		lblFuelLevel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblFuelLevel.setBounds(22, 264, 200, 27);
+		add(lblFuelLevel);
 
-		JLabel lblAccident = new JLabel("Accident: ");
-		lblAccident.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAccident.setBounds(10, 278, 94, 27);
-		add(lblAccident);
-
-		final JComboBox accidentComboBox = new JComboBox();
-		accidentComboBox.setModel(new DefaultComboBoxModel(
-				new String[] { "None", "Head-On Collision", "Window Cracked", "Flat Tire", "Engine Died" }));
-		accidentComboBox.setBounds(102, 281, 136, 26);
-		add(accidentComboBox);
-
-		final JComboBox customerProblemComboBox = new JComboBox();
-		customerProblemComboBox.setModel(new DefaultComboBoxModel(
-				new String[] { "None", "Poor Customer Service", "Poor Rental Cars", "Unclear Pricing Breakdown" }));
-		customerProblemComboBox.setBounds(445, 281, 165, 26);
-		add(customerProblemComboBox);
+		final JTextField fuelLevelInput = new JTextField();
+		fuelLevelInput.setColumns(10);
+		fuelLevelInput.setBounds(130, 266, 55, 27);
+		add(fuelLevelInput);
 
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.setForeground(Color.WHITE);
 		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnSubmit.setBackground(Color.RED);
-		btnSubmit.setBounds(259, 379, 117, 39);
+		btnSubmit.setBounds(259, 330, 117, 39);
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Submit")) {
-					if (!odometerInput.getText().trim().matches("^\\d*[1-9]\\d*$")) {
+					if (!odometerInput.getText().trim().matches("^\\d*[1-9]\\d*$")
+							|| odometerInput.getText().trim().equals("")) {
 						JOptionPane.showMessageDialog(null, "Distance Travelled Must Be Positive Integer",
 								"Input Error", JOptionPane.ERROR_MESSAGE);
 						odometerInput.setText("");
 						odometerInput.requestFocus();
-					} else if (!numberOfScratchezInput.getText().trim().matches("^\\d*[1-9]\\d*$")) {
-						JOptionPane.showMessageDialog(null, "Number Of Scratches Must Be Postive Integer!",
-								"Input Error", JOptionPane.ERROR_MESSAGE);
-						numberOfScratchezInput.setText("");
-						numberOfScratchezInput.requestFocus();
+					} else if (!fuelLevelInput.getText().trim().matches("^\\d*[1-9]\\d*$")
+							|| fuelLevelInput.getText().trim().equals("")) {
+						JOptionPane.showMessageDialog(null, "Fuel Level Must Be Postive Integer!", "Input Error",
+								JOptionPane.ERROR_MESSAGE);
+						fuelLevelInput.setText("");
+						fuelLevelInput.requestFocus();
+					} else if (Integer.parseInt(dropOffCarInfo[CarConstants.FUELCAPACITY.getValue()]) <= Integer
+							.parseInt(fuelLevelInput.getText().trim())) {
+						JOptionPane.showMessageDialog(null, "Fuel Level Must Be Less Than Fuel Capacity", "Input Error",
+								JOptionPane.ERROR_MESSAGE);
+						fuelLevelInput.setText("");
+						fuelLevelInput.requestFocus();
 					} else {
-
-						db.updateCarData(dropOffLicensePlate, Integer.parseInt(numberOfScratchezInput.getText().trim()),
-								String.valueOf(accidentComboBox.getSelectedItem()),
-								Integer.parseInt(odometerInput.getText().trim()));
-					}
-					try {
-						dropOffReservationInfoReview();
-					} catch (IOException e1) {
+						try {
+							dropOffFuelDifference = Integer.parseInt(dropOffCarInfo[CarConstants.FUELCAPACITY.getValue()]) - 	
+									Integer.parseInt(fuelLevelInput.getText().trim());
+							db.updateCarData(dropOffLicensePlate,
+									Integer.parseInt(odometerInput.getText().trim())
+											+ Integer.parseInt(dropOffCarInfo[CarConstants.ODOMETER.getValue()]),
+									Integer.parseInt(fuelLevelInput.getText().trim()));
+							distanceTravelled = Integer.parseInt(odometerInput.getText().trim());
+							dropOffReservationInfoReview();
+						} catch (IOException e1) {
+						}
 					}
 				}
 			}
@@ -2362,107 +2324,53 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 		JLabel lblManufacturer = new JLabel("Manufacturer: ");
 		lblManufacturer.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblManufacturer.setBounds(22, 107, 130, 27);
+		lblManufacturer.setBounds(22, 117, 140, 27);
 		add(lblManufacturer);
 
 		JTextField manufacturerText = new JTextField();
 		manufacturerText.setEditable(false);
 		manufacturerText.setColumns(10);
-		manufacturerText.setBounds(164, 109, 153, 27);
+		manufacturerText.setBounds(164, 119, 160, 27);
 		add(manufacturerText);
 
 		JLabel lblModel = new JLabel("Model: ");
 		lblModel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblModel.setBounds(344, 107, 77, 27);
+		lblModel.setBounds(22, 177, 77, 27);
 		add(lblModel);
 
 		JTextField modelText = new JTextField();
 		modelText.setEditable(false);
 		modelText.setColumns(10);
-		modelText.setBounds(418, 109, 158, 27);
+		modelText.setBounds(164, 179, 158, 27);
 		add(modelText);
 
 		JLabel lblCarType = new JLabel("Car Type:");
 		lblCarType.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblCarType.setBounds(22, 174, 93, 27);
+		lblCarType.setBounds(22, 227, 93, 27);
 		add(lblCarType);
 
 		JTextField carTypeText = new JTextField();
 		carTypeText.setEditable(false);
 		carTypeText.setColumns(10);
-		carTypeText.setBounds(164, 176, 153, 27);
+		carTypeText.setBounds(164, 229, 153, 27);
 		add(carTypeText);
 
-		JLabel lblNumberOfScratches = new JLabel("Number Of Scratches: ");
-		lblNumberOfScratches.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNumberOfScratches.setBounds(344, 174, 210, 27);
-		add(lblNumberOfScratches);
-
-		JTextField numberOfScratchesText = new JTextField();
-		numberOfScratchesText.setEditable(false);
-		numberOfScratchesText.setColumns(10);
-		numberOfScratchesText.setBounds(550, 176, 57, 27);
-		add(numberOfScratchesText);
-
-		JLabel lblRepairsNeeded = new JLabel("Repairs Needed:");
-		lblRepairsNeeded.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblRepairsNeeded.setBounds(22, 241, 163, 27);
-		add(lblRepairsNeeded);
-
-		JTextField repairsNeededText = new JTextField();
-		repairsNeededText.setEditable(false);
-		repairsNeededText.setColumns(10);
-		repairsNeededText.setBounds(187, 243, 311, 27);
-		add(repairsNeededText);
-
-		JLabel lblAccidents = new JLabel("Accidents: ");
-		lblAccidents.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAccidents.setBounds(22, 337, 108, 27);
-		add(lblAccidents);
-
-		JTextArea accidentsText = new JTextArea();
-		accidentsText.setRows(3);
-		accidentsText.setEditable(false);
-		accidentsText.setBounds(144, 339, 410, 57);
-		add(accidentsText);
-
-		JLabel lblMileage = new JLabel("Odometer Reading:");
+		JLabel lblMileage = new JLabel("Odometer:");
 		lblMileage.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblMileage.setBounds(22, 288, 210, 27);
+		lblMileage.setBounds(22, 279, 210, 27);
 		add(lblMileage);
 
 		JTextField mileageText = new JTextField();
 		mileageText.setEditable(false);
 		mileageText.setColumns(10);
-		mileageText.setBounds(208, 290, 290, 27);
+		mileageText.setBounds(164, 281, 140, 27);
 		add(mileageText);
 
-		/*for (int x = 0; x < 36; x++) {
-			if (NewCarJTable.data[x][5].equals(dropOffLicensePlate)) {
-				manufacturerText.setText("" + NewCarJTable.data[x][2]);
-				modelText.setText("" + NewCarJTable.data[x][3]);
-				carTypeText.setText("" + NewCarJTable.data[x][0]);
-				repairsNeededText.setText("" + NewCarJTable.data[x][6]);
-			}
-		}*/
-		
+		mileageText.setText(dropOffCarInfo[CarConstants.ODOMETER.getValue()] + " KM(s)");
 		manufacturerText.setText(dropOffCarInfo[CarConstants.MANUFACTURER.getValue()]);
 		modelText.setText(dropOffCarInfo[CarConstants.MODEL.getValue()]);
 		carTypeText.setText(dropOffCarInfo[CarConstants.TYPE.getValue()]);
-		repairsNeededText.setText(dropOffCarInfo[CarConstants.ACCIDENTS.getValue()]);
-
-		/*
-		for (int x = 0; x < 36; x++) {
-			if (NewCar.carDatabase.get(x).getLicensePlate().equals(dropOffLicensePlate)) {
-				numberOfScratchesText.setText(NewCar.carDatabase.get(x).getNumberOfScratches());
-				accidentsText.setText(NewCar.carDatabase.get(x).getAccidents());
-				mileageText.setText(NewCar.carDatabase.get(x).getKm());
-			}
-		}*/
 		
-		numberOfScratchesText.setText(dropOffCarInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]);
-		accidentsText.setText(dropOffCarInfo[CarConstants.ACCIDENTS.getValue()]);
-
 		JButton btnSaveAndPrint = new JButton("Save and Print Invoice");
 		btnSaveAndPrint.setActionCommand("Print");
 		btnSaveAndPrint.setForeground(Color.WHITE);
@@ -2487,10 +2395,11 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		button.setForeground(Color.WHITE);
 		button.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		button.setBackground(Color.RED);
-		button.setBounds(270, 398, 117, 39);
+		button.setBounds(270, 358, 117, 39);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Next Page")) {
+					db.deleteReservation(dropOffReservationData[ReservationConstants.RESERVATION_NUMBER.getValue()]);
 					mainMenu();
 				}
 			}
@@ -2526,80 +2435,52 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	public void dropOffReservationInfoReview() throws IOException {
 		refresh();
 
-		int numberOfScratches = 0, distanceTravelled = 0;
+		int numberOfScratches = 0;
 		String insuranceCost = "";
 		double estimatedPrice = 0;
 
 		dropOffCarInfo = db.getCar(dropOffLicensePlate);
 		dropOffReservationData = db.getReservation(searchReservationNumber);
 
-		/*
-		 * for (int x1 = 0; x1 < NewCar.carDatabase.size(); x1++) { if
-		 * (NewCar.carDatabase.get(x1).getLicensePlate().equals(dropOffLicensePlate)) {
-		 * numberOfScratches =
-		 * Integer.parseInt(NewCar.carDatabase.get(x1).getNumberOfScratches());
-		 * distanceTravelled = Integer.parseInt(NewCar.carDatabase.get(x1).getKm());
-		 * type = String.valueOf(NewCar.carDatabase.get(x1).getType()); } }
-		 */
-
-		/*
-		 * for (int x1 = 0; x1 < Customer.customerDatabase.size(); x1++) {
-		 * 
-		 * if (Customer.customerDatabase.get(x1).getReservationNumber().equals(
-		 * searchReservationNumber)) {
-		 * 
-		 * if (Customer.customerDatabase.get(x1).getInsuranceNumber().equals("")) {
-		 * estimatedPrice = Customer.finalPriceCalculator(type,
-		 * Customer.customerDatabase.get(x1).getUserPickUpDate(),
-		 * Customer.customerDatabase.get(x1).getUserDropOffDate(), numberOfScratches,
-		 * distanceTravelled, true); } else { estimatedPrice =
-		 * Customer.finalPriceCalculator(type,
-		 * Customer.customerDatabase.get(x1).getUserPickUpDate(),
-		 * Customer.customerDatabase.get(x1).getUserDropOffDate(), numberOfScratches,
-		 * distanceTravelled, false); } } }
-		 */
-
-		if (dropOffReservationData[ReservationConstants.RESERVATION_NUMBER.getValue()].equals("")) {
-			try {
-				estimatedPrice = Customer.finalPriceCalculator(carInfo[CarConstants.TYPE.getValue()],
+		try {
+			if (db.personalCoverage(dropOffReservationData[ReservationConstants.RESERVATION_NUMBER.getValue()])) {
+				estimatedPrice = Price.finalPriceCalculator(dropOffCarInfo[CarConstants.TYPE.getValue()],
 						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
 						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
-						Integer.parseInt(carInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]),
-						Integer.parseInt(carInfo[CarConstants.ODOMETER.getValue()]), true);
-			} catch (NumberFormatException | ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		} else {
-			try {
-				estimatedPrice = Customer.finalPriceCalculator(carInfo[CarConstants.TYPE.getValue()],
+						Integer.parseInt(dropOffCarInfo[CarConstants.ODOMETER.getValue()]), dropOffFuelDifference,
+						gasPrice, true);
+
+			} else {
+
+				estimatedPrice = Price.finalPriceCalculator(dropOffCarInfo[CarConstants.TYPE.getValue()],
 						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
 						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
-						Integer.parseInt(carInfo[CarConstants.NUMBEROFSCRATCHES.getValue()]),
-						Integer.parseInt(carInfo[CarConstants.ODOMETER.getValue()]), false);
-			} catch (NumberFormatException | ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+						Integer.parseInt(dropOffCarInfo[CarConstants.ODOMETER.getValue()]), dropOffFuelDifference,
+						gasPrice, false);
 			}
+
+		} catch (NumberFormatException | ParseException e1) {
+			e1.printStackTrace();
 		}
-	
-		if (!db.customerCoverage(searchReservationNumber))
-		{
+
+		// If gas in vehicle not full, fill it up
+		if (Integer.parseInt(dropOffCarInfo[CarConstants.FUELLEVEL.getValue()]) != Integer
+				.parseInt(dropOffCarInfo[CarConstants.FUELCAPACITY.getValue()])) {
+			db.fillUpFuel(dropOffLicensePlate, Integer.parseInt(dropOffCarInfo[CarConstants.FUELCAPACITY.getValue()]));
+		}
+
+		if (!db.customerCoverage(searchReservationNumber)) {
 			try {
-				insuranceCost = formatter.format(
-						Customer.durationCalcuator(
-						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
+				insuranceCost = formatter.format(Price.durationCalcuator(
+						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
 						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20);
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}
-		else
-		{
+		} else {
 			insuranceCost = "Personal Coverage";
 		}
-			
 
 		JLabel lblReservationSummary = new JLabel("Reservation Summary");
 		lblReservationSummary.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2675,17 +2556,17 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		totalPriceText.setBounds(493, 350, 122, 27);
 		add(totalPriceText);
 
-		JLabel lblDamageCost = new JLabel("Damage Cost:");
-		lblDamageCost.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblDamageCost.setBounds(300, 300, 211, 27);
-		add(lblDamageCost);
+		JLabel lblFuelCost = new JLabel("Fuel Cost:");
+		lblFuelCost.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblFuelCost.setBounds(300, 300, 211, 27);
+		add(lblFuelCost);
 
-		JTextField damageCostText = new JTextField();
-		damageCostText.setEditable(false);
-		damageCostText.setText(formatter.format(numberOfScratches * 10.00));
-		damageCostText.setColumns(10);
-		damageCostText.setBounds(493, 300, 122, 27);
-		add(damageCostText);
+		JTextField fuelCostText = new JTextField();
+		fuelCostText.setEditable(false);
+		fuelCostText.setText(formatter.format(numberOfScratches * 10.00));
+		fuelCostText.setColumns(10);
+		fuelCostText.setBounds(493, 300, 122, 27);
+		add(fuelCostText);
 
 		JLabel lblInsuranceCost = new JLabel("Insurance Cost:");
 		lblInsuranceCost.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -2699,39 +2580,22 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		insuranceCostText.setBounds(160, 350, 122, 27);
 		add(insuranceCostText);
 
-		/*Date reservedPick = null;
-		Date reservedDrop = null;
-		for (int x = 0; x < ReservationJTable.data.length; x++) {
-			if (ReservationJTable.data[x][12].equals(searchReservationNumber)) {
-				pickUpDateText.setText(df.format(ReservationJTable.data[x][6]));
-				dropOffDateText.setText(df.format(ReservationJTable.data[x][7]));
-				durationText.setText("" + Customer.durationCalcuator((Date) ReservationJTable.data[x][6],
-						(Date) ReservationJTable.data[x][7]) + " day(s)");
-				dropOffLicensePlate = (String) ReservationJTable.data[x][11];
-				reservedPick = (Date) ReservationJTable.data[x][6];
-				reservedDrop = (Date) ReservationJTable.data[x][7];
-			}
-		}*/
-
+		fuelCostText.setText(formatter.format(dropOffFuelDifference * gasPrice));
 		pickUpDateText.setText(dropOffReservationData[ReservationConstants.PICKUP.getValue()]);
 		dropOffDateText.setText(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]);
 		try {
-			durationText.setText("" + Customer.durationCalcuator(
-					rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]), 
-					rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+			durationText
+					.setText(""
+							+ Customer.durationCalcuator(
+									rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+									rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]))
+							+ " day(s)");
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		/*for (int x = 0; x < 36; x++) {
-			if (NewCarJTable.data[x][5].equals(dropOffLicensePlate)) {
-				String priceDay = formatter.format(Customer.dailyPrice((String) NewCarJTable.data[x][0]));
-				pricePerDayText.setText(priceDay);
-			}
-		}*/
-		
-		String priceDay = formatter.format(Customer.dailyPrice(carInfo[CarConstants.TYPE.getValue()]));
+
+		String priceDay = formatter.format(Customer.dailyPrice(dropOffCarInfo[CarConstants.TYPE.getValue()]));
 		pricePerDayText.setText(priceDay);
 
 		JButton btnOk = new JButton("Ok");

@@ -62,7 +62,7 @@ public class SupremeCarRentalsApp extends JFrame
 			a.setVisible(false);
 		}*/
 	
-		Customer.readDatabase();
+		
 		new SupremeCarRentalsApp();
 	}
 }

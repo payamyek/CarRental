@@ -395,7 +395,7 @@ public class Customer {
 			price = 100.45;
 		else if (carType.equals("Intermediate SUV"))
 			price = 60.45;
-		else if (carType.equals("Standard SUV"))
+		else if (carType.equals("Standard SUV"))	
 			price = 65.45;
 		else if (carType.equals("Large SUV"))
 			price = 75.45;

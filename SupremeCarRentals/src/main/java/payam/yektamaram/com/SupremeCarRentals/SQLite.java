@@ -10,13 +10,13 @@ import java.util.Arrays;
 public class SQLite {
 
 	/* Database Connection */
-	Connection con = null;
+	static Connection con = null;
 
-	/* Allows for the execution of basic queries */
+	static /* Allows for the execution of basic queries */
 	Statement stmt = null;
 
 	/* The result of the query */
-	ResultSet rs = null;
+	static ResultSet rs = null;
 
 	/* Precompiled SQL statement. */
 	PreparedStatement preparedStmt = null;
@@ -53,6 +53,50 @@ public class SQLite {
 		dropTable("customer");
 	}
 	
+	
+	
+	static Object[][] getCarTableData()
+	{
+		Object[][] carTable =  new Object[24][8];
+		int x = 0;
+		
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM car ;");
+
+			while (rs.next()) {
+				carTable[x][0] = rs.getString("type");
+				carTable[x][1] = String.valueOf(rs.getInt("year"));
+				carTable[x][2] = rs.getString("manufacturer");
+				carTable[x][3] = rs.getString("model");
+				carTable[x][4] = String.valueOf(rs.getInt("odometer"));
+				carTable[x][5] = rs.getString("licensePlate");
+				carTable[x][6] = String.valueOf(rs.getInt("fuelCapacity"));
+				carTable[x][7] = String.valueOf(rs.getInt("fuelLevel"));
+				x++;
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				rs = null;
+			}
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				stmt = null;
+			}
+		}
+		return carTable;
+	}
+	
 	/**
 	 * Creates the car table.
 	 */
@@ -65,7 +109,7 @@ public class SQLite {
 
 				stmt = con.createStatement();
 				sql = "CREATE TABLE car (type TEXT, year INT, manufacturer TEXT, model TEXT,"
-						+ "odometer INT, licensePlate TEXT, gasLevel INT);";
+						+ "odometer INT, licensePlate TEXT, fuelCapacity INT, fuelLevel INT);";
 				stmt.executeUpdate(sql);
 				stmt.close();
 
@@ -81,32 +125,61 @@ public class SQLite {
 				}
 			}
 
-			insertCar("Economy", 2019, "Toyota", "Prius", 0, "AFYT 754", 100);
-			insertCar("Economy", 2019, "Toyota", "Prius", 0, "EFLT 656", 100);
-			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "LFRF 541", 100);
-			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "PKKT 254", 100);
-			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "RLYT 252", 100);
-			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "LLYT 532", 100);
-			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "IFSA 442", 100);
-			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "ILKS 545", 100);
-			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "ISSA 442", 100);
-			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "IURE 325", 100);
-			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "FFSA 442", 100);
-			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "IRRS 115", 100);
-			insertCar("Premium", 2019, "Audi", "A3", 0, "FFFT 123", 100);
-			insertCar("Premium", 2019, "Audi", "A3", 0, "OERE 141", 100);
-			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASAA 442", 100);
-			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASQQ 123", 100);
-			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "MONE 442", 100);
-			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "PEOP 123", 100);
-			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "AAAA 442", 100);
-			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "QQQQ 123", 100);
-			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "HWUO 252", 100);
-			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "KJWW 213", 100);
-			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "ADDA 123", 100);
-			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "KJKH 123", 100);
+			insertCar("Economy", 2019, "Toyota", "Prius", 0, "AFYT 754", 40, 40);
+			insertCar("Economy", 2019, "Toyota", "Prius", 0, "EFLT 656", 40, 40);
+			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "LFRF 541", 44,44);
+			insertCar("Compact", 2019, "Toyota", "Yaris", 0, "PKKT 254", 44,44);
+			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "RLYT 252", 43, 43);
+			insertCar("Intermediate", 2019, "Hyundai", "Accent", 0, "LLYT 532", 43, 43);
+			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "IFSA 442", 52, 52);
+			insertCar("Standard Size", 2019, "Chevrolet", "Cruze", 0, "ILKS 545", 52, 52);
+			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "ISSA 442", 70, 70);
+			insertCar("Full Size", 2019, "Chevrolet", "Impala", 0, "IURE 325", 70, 70);
+			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "FFSA 442", 75, 75);
+			insertCar("Mini Van/7 Seater", 2019, "Dodge", "Caravan", 0, "IRRS 115", 75, 75);
+			insertCar("Premium", 2019, "Audi", "A3", 0, "FFFT 123", 55, 55);
+			insertCar("Premium", 2019, "Audi", "A3", 0, "OERE 141", 55, 55);
+			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASAA 442", 80, 80);
+			insertCar("Luxury", 2019, "Mercedes-Benz", "E450", 0, "ASQQ 123", 80, 80);
+			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "MONE 442", 82, 82);
+			insertCar("Supreme", 2019, "Rolls Royce", "Dawn", 0, "PEOP 123", 82, 82);
+			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "AAAA 442", 62, 62);
+			insertCar("Intermediate SUV", 2019, "Hyundai", "Tucson", 0, "QQQQ 123", 62, 62);
+			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "HWUO 252", 70, 70);
+			insertCar("Standard SUV", 2019, "Ford", "Edge", 0, "KJWW 213", 70, 70);
+			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "ADDA 123", 98, 98);
+			insertCar("Large SUV", 2019, "GMC", "Yukon", 0, "KJKH 123", 98, 98);
 		}
 	}
+	
+	void fillUpFuel(String licensePlate, int fuelCapacity)
+	{
+		try {
+
+			preparedStmt = con.prepareStatement(
+					"UPDATE car SET fuelLevel = ? WHERE licensePlate = ? ");
+			preparedStmt.setInt(1, fuelCapacity);
+			preparedStmt.setString(2, licensePlate);
+
+			// execute the preparedstatement
+			preparedStmt.execute();
+
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		} finally {
+			if (preparedStmt != null) {
+				try {
+					preparedStmt.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				preparedStmt = null;
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Creates the customer table.
@@ -116,8 +189,8 @@ public class SQLite {
 
 		try {
 			stmt = con.createStatement();
-			sql = "CREATE TABLE IF NOT EXISTS customer (first_name TEXT, last_name TEXT, credit_card_number TEXT,"
-					+ "insurance_number TEXT, driver_license VARCHAR(17), email TEXT, reservation_number TEXT , PRIMARY KEY (driver_license));";
+			sql = "CREATE TABLE IF NOT EXISTS customer (firstName TEXT, lastName TEXT, creditCardNumber TEXT,"
+					+ "insuranceNumber TEXT, driverLicense VARCHAR(17), email TEXT, reservationNumber TEXT , PRIMARY KEY (driverLicense));";
 			stmt.executeUpdate(sql);
 			stmt.close();
 
@@ -141,8 +214,8 @@ public class SQLite {
 		String sql;
 		try {
 			stmt = con.createStatement();
-			sql = "CREATE TABLE IF NOT EXISTS reservation (pick_up TEXT, drop_off TEXT, license_plate VARCHAR(8)"
-					+ "REFERENCES CAR(license_plate), reservation_number TEXT)";
+			sql = "CREATE TABLE IF NOT EXISTS reservation (pickUp TEXT, dropOff TEXT, licensePlate VARCHAR(8)"
+					+ "REFERENCES CAR(licensePlate), reservationNumber TEXT)";
 			stmt.executeUpdate(sql);
 			stmt.close();
 
@@ -209,13 +282,13 @@ public class SQLite {
 
 			if (table.equals("customer")) {
 				while (rs.next()) {
-					System.out.print("First Name: " + rs.getString("first_name"));
-					System.out.print(" Last Name: " + rs.getString("last_name"));
-					System.out.print(" Credit Card: " + rs.getString("credit_card_number"));
-					System.out.print(" Insurance: " + rs.getString("insurance_number"));
-					System.out.print(" Driver License: " + rs.getString("driver_license"));
+					System.out.print("First Name: " + rs.getString("firstName"));
+					System.out.print(" Last Name: " + rs.getString("lastName"));
+					System.out.print(" Credit Card: " + rs.getString("creditCardNumber"));
+					System.out.print(" Insurance: " + rs.getString("insuranceNumber"));
+					System.out.print(" Driver License: " + rs.getString("driverLicense"));
 					System.out.print(" Email: " + rs.getString("email"));
-					System.out.println(" Reservation Number: " + rs.getString("reservation_number"));
+					System.out.println(" Reservation Number: " + rs.getString("reservationNumber"));
 				}
 			} else if (table.equals("car")) {
 				while (rs.next()) {
@@ -225,17 +298,16 @@ public class SQLite {
 					System.out.print(" Model: " + rs.getString("model"));
 					System.out.print(" Odometer: " + rs.getInt("odometer"));
 					System.out.print(" License Plate: " + rs.getString("licensePlate"));
-					System.out.print(" Status: " + rs.getString("status"));
-					System.out.print(" Scratches: " + rs.getInt("numberOfScratches"));
-					System.out.println(" Accidents: " + rs.getString("accidents"));
+					System.out.print(" Fuel Capacity: " + rs.getInt("fuelCapacity"));
+					System.out.println(" Fuel Level: " + rs.getInt("fuelLevel"));
 
 				}
 			} else if (table.equals("reservation")) {
 				while (rs.next()) {
-					System.out.print("Pick-Up: " + rs.getString("pick_up"));
-					System.out.print(" Drop-off: " + rs.getString("drop_off"));
-					System.out.print(" License Plate: " + rs.getString("license_plate"));
-					System.out.println(" Reservation Number: " + rs.getString("reservation_number"));
+					System.out.print("Pick-Up: " + rs.getString("pickUp"));
+					System.out.print(" Drop-off: " + rs.getString("dropOff"));
+					System.out.print(" License Plate: " + rs.getString("licensePlate"));
+					System.out.println(" Reservation Number: " + rs.getString("reservationNumber"));
 				}
 			}
 			stmt.close();
@@ -321,10 +393,10 @@ public class SQLite {
 
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(
-					"SELECT reservation_number FROM reservation ORDER BY reservation_number DESC LIMIT 1;");
+					"SELECT reservationNumber FROM reservation ORDER BY reservationNumber DESC LIMIT 1;");
 
 			if (rs.next()) {
-				reservationNumber = rs.getString("reservation_number");
+				reservationNumber = rs.getString("reservationNumber");
 				identifier = Integer.parseInt(reservationNumber.substring((reservationNumber.indexOf("-") + 1)));
 				stmt.close();
 				rs.close();
@@ -357,6 +429,46 @@ public class SQLite {
 		return reservationNumber;
 	}
 
+	
+	boolean personalCoverage(String reservationNumber)
+	{
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM customer WHERE reservationNumber = '" + reservationNumber + "';");
+
+			if(rs.next()) {
+				if (rs.getString("reservationNumber").equals(""))
+				{
+					return false;
+				}
+			}
+			stmt.close();
+			rs.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				rs = null;
+			}
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+				stmt = null;
+			}
+		}
+		return false;
+	}
+	
+	
 	/**
 	 * Insert customer.
 	 *
@@ -397,11 +509,11 @@ public class SQLite {
 	 *
 	 * @param email the email
 	 */
-	private void deleteCustomer(String email) {
+	protected void deleteReservation(String reservationNumber) {
 		try {
 
 			stmt = con.createStatement();
-			stmt.executeUpdate("DELETE FROM customer WHERE email = \"" + email + "\";");
+			stmt.executeUpdate("DELETE FROM reservation WHERE reservationNumber = \"" + reservationNumber + "\";");
 
 		} catch (SQLException ex) {
 			System.out.println("SQLException: " + ex.getMessage());
@@ -527,7 +639,7 @@ public class SQLite {
 		try {
 			stmt = con.createStatement();
 			rs = stmt
-					.executeQuery("SELECT * FROM reservation WHERE reservation_number = \"" + reservationNumber + "\"");
+					.executeQuery("SELECT * FROM reservation WHERE reservationNumber = \"" + reservationNumber + "\"");
 
 			if (rs.next() != false) // Result set is not empty
 			{
@@ -630,17 +742,18 @@ public class SQLite {
 	 * @param numberOfScratches the number of scratches
 	 * @param accidents the accidents
 	 */
-	private void insertCar(String type, int year, String manufacturer, String model, int odometer, String licensePlate, int gasLevel) {
+	private void insertCar(String type, int year, String manufacturer, String model, int odometer, String licensePlate, int fuelCapacity , int fuelLevel) {
 		try {
 
-			preparedStmt = con.prepareStatement("INSERT INTO car values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			preparedStmt = con.prepareStatement("INSERT INTO car values (?, ?, ?, ?, ?, ?, ?, ?)");
 			preparedStmt.setString(1, type);
 			preparedStmt.setInt(2, year);
 			preparedStmt.setString(3, manufacturer);
 			preparedStmt.setString(4, model);
 			preparedStmt.setInt(5, odometer);
 			preparedStmt.setString(6, licensePlate);
-			preparedStmt.setInt(7, gasLevel);
+			preparedStmt.setInt(7, fuelCapacity);
+			preparedStmt.setInt(8, fuelLevel);
 
 			// execute the preparedstatement
 			preparedStmt.execute();
@@ -667,7 +780,7 @@ public class SQLite {
 	 * @return the car
 	 */
 	public String[] getCar(String licensePlate) {
-		String carInfo[] = new String[9];
+		String carInfo[] = new String[8];
 
 		try {
 			stmt = con.createStatement();
@@ -680,9 +793,8 @@ public class SQLite {
 				carInfo[3] = rs.getString("model");
 				carInfo[4] = String.valueOf(rs.getInt("odometer"));
 				carInfo[5] = rs.getString("licensePlate");
-				carInfo[6] = rs.getString("status");
-				carInfo[7] = String.valueOf(rs.getInt("numberOfScratches"));
-				carInfo[8] = rs.getString("accidents");
+				carInfo[6] = String.valueOf(rs.getInt("fuelCapacity"));
+				carInfo[7] = String.valueOf(rs.getInt("fuelLevel"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -717,16 +829,16 @@ public class SQLite {
 
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM customer WHERE reservation_number = \"" + reservationNumber + "\";");
+			rs = stmt.executeQuery("SELECT * FROM customer WHERE reservationNumber = \"" + reservationNumber + "\";");
 			
 			if (rs.next()) {
-				customerInfo[0] = rs.getString("first_name");
-				customerInfo[1] = rs.getString("last_name");
-				customerInfo[2] = rs.getString("credit_card_number");
-				customerInfo[3] = rs.getString("insurance_number");
-				customerInfo[4] = rs.getString("driver_license");
+				customerInfo[0] = rs.getString("firstName");
+				customerInfo[1] = rs.getString("lastName");
+				customerInfo[2] = rs.getString("creditCardNnumber");
+				customerInfo[3] = rs.getString("insuranceNumber");
+				customerInfo[4] = rs.getString("driverLicense");
 				customerInfo[5] = rs.getString("email");
-				customerInfo[6] = rs.getString("reservation_number");
+				customerInfo[6] = rs.getString("reservationNumber");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -761,13 +873,13 @@ public class SQLite {
 
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM reservation WHERE reservation_number = \"" + reservationNumber + "\";");
+			rs = stmt.executeQuery("SELECT * FROM reservation WHERE reservationNumber = \"" + reservationNumber + "\";");
 
 			if (rs.next()) {
-				reservationData[ReservationConstants.PICKUP.getValue()] = rs.getString("pick_up");
-				reservationData[ReservationConstants.DROPOFF.getValue()] = rs.getString("drop_off");
-				reservationData[ReservationConstants.LICENSEPLATE.getValue()] = rs.getString("license_plate");
-				reservationData[ReservationConstants.RESERVATION_NUMBER.getValue()] = rs.getString("reservation_number");
+				reservationData[ReservationConstants.PICKUP.getValue()] = rs.getString("pickUp");
+				reservationData[ReservationConstants.DROPOFF.getValue()] = rs.getString("dropOff");
+				reservationData[ReservationConstants.LICENSEPLATE.getValue()] = rs.getString("licensePlate");
+				reservationData[ReservationConstants.RESERVATION_NUMBER.getValue()] = rs.getString("reservationNumber");
 			}
 			
 		} catch (SQLException e) {
@@ -803,11 +915,10 @@ public class SQLite {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(
-					"SELECT * FROM reservation WHERE reservation_number = \"" + reservationNumber + "\";");
+					"SELECT * FROM reservation WHERE reservationNumber = \"" + reservationNumber + "\";");
 
 			if (rs.next()) {
-				licensePlate = rs.getString("license_plate");
-
+				licensePlate = rs.getString("licensePlate");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -838,15 +949,14 @@ public class SQLite {
 	 * @param accidents the accidents
 	 * @param odometer the odometer
 	 */
-	public void updateCarData(String licensePlate, int numberOfScratches, String accidents, int odometer) {
+	public void updateCarData(String licensePlate, int odometer, int fuelLevel) {
 		try {
 
 			preparedStmt = con.prepareStatement(
-					"UPDATE car SET numberOfScratches = ? , accidents = ? , odometer = ? WHERE licensePlate = ? ");
-			preparedStmt.setInt(1, numberOfScratches);
-			preparedStmt.setString(2, accidents);
-			preparedStmt.setInt(3, odometer);
-			preparedStmt.setString(4, licensePlate);
+					"UPDATE car SET odometer = ? , fuelLevel = ? WHERE licensePlate = ? ");
+			preparedStmt.setInt(1, odometer);
+			preparedStmt.setInt(2, fuelLevel);
+			preparedStmt.setString(3, licensePlate);
 
 			// execute the preparedstatement
 			preparedStmt.execute();
@@ -865,6 +975,7 @@ public class SQLite {
 			}
 		}
 	}
+	
 
 	public boolean customerCoverage(String reservationNumber)
 	{
@@ -873,10 +984,10 @@ public class SQLite {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(
-					"SELECT * FROM customer WHERE reservation_number = \"" + reservationNumber + "\";");
+					"SELECT * FROM customer WHERE reservationNumber = \"" + reservationNumber + "\";");
 
 			if (rs.next()) {
-				if (rs.getString("insurance_number").equals(""))
+				if (rs.getString("insuranceNumber").equals(""))
 				{
 					coverage = false;
 				}
@@ -909,12 +1020,13 @@ public class SQLite {
 	 */
 	public static void main(String[] args) {
 		SQLite db = new SQLite();
-		//db.printTable("customer");
-		//db.printTable("reservation");
 		//db.cleanDatabases();
 		//db.setUpDatabases();
-		// db.printTable("car");
-		//db.insertReservation("Monday", "Tuesday", "AFYT 754", "INT-1");
+		
+		db.deleteReservation("INT-1");
+		db.printTable("reservation");
+		//String arr [] = db.getCar("AFYT 754");
+		//System.out.println(db.getReservationLicensePlate("INT-1"));
 	}
 
 }
