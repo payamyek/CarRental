@@ -15,4 +15,6 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 
 ## Renting a Car
 
-- In the main menu choose "Rent Car" option which will take you to this screen: ![ScreenShot](SupremeCarRentals/"README Files"/RentCar.PNG)
+- In the main menu choose "Rent Car" option which will take you to this screen: 
+
+![ScreenShot](/'README Files'/RentCar.PNG)
