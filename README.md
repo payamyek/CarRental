@@ -18,3 +18,12 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 - In the main menu choose "Rent Car" option which will take you to this screen: 
 
 ![ScreenShot](Screenshots/RentCar.PNG)
+
+- Toronto Supreme Car Rentals is only open from 9:00 AM to 9:00 PM so those are the only available times 
+- All reservations must be made a day in advance and it must be at least one day long in duration
+
+- After valid reservation details are provided you will be taken to this screen:
+
+![ScreenShot](Screenshots/ChooseCar.PNG)
+
+- The JComboBox only allows the users to select cars that are available based on their chosen dates for their chosen vehicle type, in this case it is Economy.
