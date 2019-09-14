@@ -42,6 +42,8 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 
 - To view tables choose "View" in the main menu and choose any of the 3 available tables ("Car", "Reservation", "Customer")
 - You can also narrow down the table data by specifying any key word
+- You can also change the column orders by clicking and dragging the columns
+- You can also sort each column by click on the top of each column
 
 ### Car Table
 
@@ -57,7 +59,7 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 
 # Pricing
 
-- Pricing is calculate on a variety of factors which include the car type, rental duration, insurance coverage, and car's fuel level when returned
+- Pricing is calculated on a variety of factors which include the car type, rental duration, insurance coverage, and car's fuel level when returned
 
 ## Car Type
 
