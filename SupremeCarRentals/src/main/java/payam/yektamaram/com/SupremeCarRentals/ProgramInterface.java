@@ -33,61 +33,56 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * 
  * <h2>Global Variables</h2>
  * <p>
- * <b>passwordField_1 - </b>Password Field which is entered by user.
+ * <b>db - </b> An instance of the SQLite class that enables connection to the database
  * <p>
- * <b>userField - </b>TextField for employee's user name.
+ * <b>dropOffReservationData - </b> Array that holds information regarding reservation that is being returned
  * <p>
- * <b>LOGIN_KEY - </b>Username that is valid for program use.
+ * <b>dropOffCarInfo - </b> Array that holds information regarding car that is being returned
  * <p>
- * <b>pickUpDatePicker - </b>An instance of the JDatePickerImpl Class that holds
+ * <b>distanceTravelled - </b> Holds how far the customer has driven in kilometers upon return
+ * <p>
+ * <b>df - </b> An instance of the SimpleDateFormat class that specifies the date format
+ * <p>
+ * <b>timestamp - </b> Current data and time using df format
+ * <p>
+ * <b>formatter - </b> An instance of the NumberFormat class which is used for price formatting using local currency
+ * <p>
+ * <b>passwordField - </b> An instance of the JPasswordField class which is entered by user on login screen
+ * <p>
+ * <b>userField - </b> An instance of the JTextField used for employee's user name on login screen
+ * <p>
+ * <b>LOGIN_KEY - </b> Username that is valid to gain entry to application
+ * <p>
+ * <b>PASSWORD_KEY - </b> Password that is valid to gain entry to application
+ * <p>
+ * <b>pickUpDatePicker - </b> An instance of the JDatePickerImpl Class that holds
  * the pick up date of a rental vehicle.
  * <p>
- * <b>dropOffDatePicker- </b>An instance of the JDatePickerImpl Class that holds
+ * <b>dropOffDatePicker- </b> An instance of the JDatePickerImpl Class that holds
  * the drop off date of a rental vehicle.
  * <p>
- * <b>recordNumber - </b> Holds the number of records.
  * <p>
- * <b>customerData - </b> String array that holds information regarding customer
+ * <b>pickUpSelectedDate - </b> Holds date obtained from pickUpDatePicker
  * <p>
- * <b>FNAME - </b> Constant for index of first name in customerData
+ * <b>dropOffSelectedDate - </b> Holds date obtained from dropOffDatePicker
  * <p>
- * <b>LNAME - </b> Constant for index of last name in customerData
+ * <b>userPickUpDate - </b> Properly formated date of pickUpSelectedDate using df
  * <p>
- * <b>EMAIL - </b> Constant for index of email in customerData
+ * <b>userDropOffDate - </b> Properly formated date of dropOffSelectedDate using using df
  * <p>
- * <b>CREDIT - </b> Constant for index of credit card number in customerData
+ * <b>customerData - </b> String array that holds information regarding customer that is currently renting a car
  * <p>
- * <b>INSUR - </b> Constant for index of insurance number in customerData
+ * <b>searchReservationNumber - </b> Reservation number of car that is being returned
  * <p>
- * <b>TYPE - </b> Constant for index of car type in customerData
+ * <b>dropOffLicensePlate - </b> License plate of car that is being returned
  * <p>
- * <b>PICKUPDATE - </b> Constant for index of rental pick up date in
- * customerData
+ * <b>availableCarsResult - </b> An instance of JComboBox that shows available cars given renters conditions
  * <p>
- * <b>PICKUPTIME - </b> Constant for index of rental pick up time in
- * customerData
+ * <b>dropOffFuelDifference - </b> Amount of fuel in liters that have been used by driver and not refilled
  * <p>
- * <b>DROPOFFDATE - </b> Constant for index of rental drop off date in
- * customerData
+ * <b>gasPrice - </b> Price per liter to be charged if car is not returned with full gas
  * <p>
- * <b>DROPOFFTIME - </b> Constant for index of rental drop off time in
- * customerData
- * <p>
- * <b>PLATE - </b> Constant for index of license plate number in customerData
- * <p>
- * <b>LICENSE - </b> Constant for index of driver license number in customerData
- * <p>
- * <b>RESERVATION - </b> Constant for index of reservation number in
- * customerData
- * <p>
- * <b>car - </b> An instance of the Car class.
- * <p>
- * <b>customer - </b> An instance of the Customer class.
- * <p>
- * <b>j1 - </b> An instance of the NewCarJTable class.
- * <p>
- * <b>db - </b> An instance of the SQLite class for access to database
- * functionality
+ * <b>carInfo - </b> Array that holds information regarding car that is being rented
  * <p>
  * 
  * @version 2.4.0
@@ -98,27 +93,23 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 @SuppressWarnings("serial")
 public class ProgramInterface extends JPanel implements ActionListener {
 
-	SQLite db = new SQLite(); // Instance of Database
+	private SQLite db = new SQLite(); 
 
-	String dropOffReservationData[];
+	private String dropOffReservationData[];
 
-	String dropOffCarInfo[];
+	private String dropOffCarInfo[];
 
-	String dropOffCustomerInfo[];
-
-	int distanceTravelled;
+	private int distanceTravelled;
 	
-	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // date format to work with
+	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-	String timeStamp = df.format(Calendar.getInstance().getTime()); // Gets current time
-
-	SimpleDateFormat rf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    String timeStamp = df.format(Calendar.getInstance().getTime()); 
 
 	NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
-	private JPasswordField passwordField; // get inputed password
+	private JPasswordField passwordField; 
 
-	private JTextField userField; // get user name field
+	private JTextField userField; 
 
 	private final static String LOGIN_KEY = "Admin", PASSWORD_KEY = "password123";
 
@@ -126,21 +117,19 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 	private String customerData[] = new String[13];
 
-	Date pickUpSelectedDate, dropOffSelectedDate, userPickUpDate, userDropOffDate;
+	private Date pickUpSelectedDate, dropOffSelectedDate, userPickUpDate, userDropOffDate;
 
-	String searchReservationNumber;
+	private String searchReservationNumber;
 
-	String dropOffLicensePlate;
+	private String dropOffLicensePlate;
 
 	static JComboBox availableCarsResult = new JComboBox();
 
-	int recordNumber;
-
-	int dropOffFuelDifference;
+	private int dropOffFuelDifference;
 
 	final double gasPrice = 1.29;
 
-	String carInfo[] = new String[8];
+	private String carInfo[] = new String[8];
 
 
 	/**
@@ -149,8 +138,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	public ProgramInterface() {
 		setLayout(null);
 		loginMenu();
-		db.cleanDatabases();
-		db.setUpDatabases();
+		//db.cleanDatabases();
+		//db.setUpDatabases();
 	}
 
 	/**
@@ -586,9 +575,9 @@ public class ProgramInterface extends JPanel implements ActionListener {
 						dropOffDatePicker.getJFormattedTextField().setText("");
 					} else {
 						try {
-							userPickUpDate = rf.parse(customerData[CustomerConstants.PICKUPDATE.getValue()] + " "
+							userPickUpDate = df.parse(customerData[CustomerConstants.PICKUPDATE.getValue()] + " "
 									+ customerData[CustomerConstants.PICKUPTIME.getValue()]);
-							userDropOffDate = rf.parse(customerData[CustomerConstants.DROPOFFDATE.getValue()] + " "
+							userDropOffDate = df.parse(customerData[CustomerConstants.DROPOFFDATE.getValue()] + " "
 									+ customerData[CustomerConstants.DROPOFFTIME.getValue()]);
 							availableCars();
 
@@ -1858,8 +1847,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 */
 		try {
 			rentalTime1.showText(
-					Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-							rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+					Customer.durationCalcuator(df.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+							df.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1986,8 +1975,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		 */
 		try {
 			rentalDuration1.showText(
-					Customer.durationCalcuator(rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-							rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
+					Customer.durationCalcuator(df.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+							df.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) + " day(s)");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2015,8 +2004,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		if (dropOffCustomerInfo[3].equals("")) {
 			try {
 				insuranceCost1.showText(formatter.format(Customer.durationCalcuator(
-						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20));
+						df.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+						df.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2440,16 +2429,16 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		try {
 			if (db.personalCoverage(dropOffReservationData[ReservationConstants.RESERVATION_NUMBER.getValue()])) {
 				estimatedPrice = Price.finalPriceCalculator(dropOffCarInfo[CarConstants.TYPE.getValue()],
-						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
+						df.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+						df.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
 						Integer.parseInt(dropOffCarInfo[CarConstants.ODOMETER.getValue()]), dropOffFuelDifference,
 						gasPrice, true);
 
 			} else {
 
 				estimatedPrice = Price.finalPriceCalculator(dropOffCarInfo[CarConstants.TYPE.getValue()],
-						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
+						df.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+						df.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]),
 						Integer.parseInt(dropOffCarInfo[CarConstants.ODOMETER.getValue()]), dropOffFuelDifference,
 						gasPrice, false);
 			}
@@ -2467,8 +2456,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		if (!db.customerCoverage(searchReservationNumber)) {
 			try {
 				insuranceCost = formatter.format(Price.durationCalcuator(
-						rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-						rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20);
+						df.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+						df.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()])) * 20);
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -2582,8 +2571,8 @@ public class ProgramInterface extends JPanel implements ActionListener {
 			durationText
 					.setText(""
 							+ Customer.durationCalcuator(
-									rf.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
-									rf.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]))
+									df.parse(dropOffReservationData[ReservationConstants.PICKUP.getValue()]),
+									df.parse(dropOffReservationData[ReservationConstants.DROPOFF.getValue()]))
 							+ " day(s)");
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
