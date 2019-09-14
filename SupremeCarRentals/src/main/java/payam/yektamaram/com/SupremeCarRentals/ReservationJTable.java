@@ -49,11 +49,9 @@ public class ReservationJTable extends JFrame {
 
 	/** The data. */
 	protected static Object[][] data;
-
+	
 	/** The column names. */
-	private String[] columnNames = { "First Name", "Last Name", "Email Address", "License #", "Insurance #",
-			"Credit Card #", "Pick-Up Date", "Drop-Off Date", "Car Type", "Car Make", "Car Model", "License Plate",
-			"Reservation #", "Customer Problems", "Customer Rating" };
+	private String[] columnNames = { "Pick-up Date", "Drop-off Date", "License Plate", "Reservation Number"};
 
 	/** The table model. */
 	@SuppressWarnings("unused")
@@ -62,12 +60,7 @@ public class ReservationJTable extends JFrame {
 	/** The table. */
 	@SuppressWarnings("unused")
 	private JTable table;
-
-	/** The my list. */
-	private ReservationData myList;
-
-	/** The instanced Car class. */
-	Customer c1 = new Customer();
+	
 
 	private JTextField jtfFilter = new JTextField();
 
@@ -81,9 +74,9 @@ public class ReservationJTable extends JFrame {
 	public ReservationJTable() throws ParseException {
 		setBounds(10, 10, 1400, 700);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		myList = new ReservationData();
-		ReservationData.readFromCSV("reservationDatabase.csv");
-		data = myList.convert2Data();
+		
+		data = SQLite.getReservationTableData();
+		
 		DefaultTableModel model = new DefaultTableModel(data, columnNames);
 		JTable table = new JTable(model);
 		final TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(table.getModel());

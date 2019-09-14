@@ -70,7 +70,7 @@ public class NewCarJTable extends JFrame {
 	 *            the title
 	 */
 	public NewCarJTable() {
-		setSize(1100, 690);
+		setSize(830, 474);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	
 		data = SQLite.getCarTableData();
@@ -118,10 +118,10 @@ public class NewCarJTable extends JFrame {
 			}
 
 		});
-		table.setSelectionBackground(Color.blue);
+		table.setSelectionBackground(Color.green);
 		table.setFocusable(false);
 		table.setRowSelectionAllowed(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		JButton nextButton = new JButton("Back To Main Menu");
 		nextButton.setForeground(Color.WHITE);
