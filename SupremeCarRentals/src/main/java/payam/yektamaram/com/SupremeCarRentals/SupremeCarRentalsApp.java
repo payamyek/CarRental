@@ -54,15 +54,14 @@ public class SupremeCarRentalsApp extends JFrame
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Exception ignored) {
 		}
-/*
+
 		SplashScreen a = new SplashScreen();
 		a.setVisible(true);
 		a.update();
 		if (a.progressBar.getValue() == 100) {
 			a.setVisible(false);
-		}*/
+		}
 	
-		
 		new SupremeCarRentalsApp();
 	}
 }
