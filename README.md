@@ -38,3 +38,21 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 - The insurance number should only be provided if the customer wants to use their own insurance and must contain 5 uppercase letters followed by two numbers
 - The driver license number follows the Ontario driver license format which is LNNNN-NNNNN-NNNNN where L is a capital letter and N is a number
 
+
+## Viewing Database Tables
+
+- To view tables choose "View" in the main menu and choose any of the 3 available tables ("Car", "Reservation", "Customer")
+
+### Car Table
+
+![ScreenShot](Screenshots/CarTable.PNG)
+
+### Reservation Table
+
+![ScreenShot](Screenshots/ReservationTable.PNG)
+
+### Customer Table
+
+![ScreenShot](Screenshots/CustomerTable.PNG)
+
+
