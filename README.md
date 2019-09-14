@@ -55,4 +55,23 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 
 ![ScreenShot](Screenshots/CustomerTable.PNG)
 
+# Pricing
 
+- Pricing is calculate on a variety of factors which include the car type, rental duration, insurance coverage, and car's fuel level when returned
+
+## Car Type
+
+| Car Type          | Price Per Day |
+| ----------------- | ------------- |
+| Economy           | $23.94        |
+| Compact           | $29.50        |
+| Intermediate      | $34.50        |
+| Standard Size     | $39.50        |
+| Full Size         | $45.00        |
+| Mini Van/7 Seater | $75.99        |
+| Premium           | $85.50        |
+| Luxury            | $95.50        |
+| Supreme           | $100.45       |
+| Intermediate SUV  | $60.45        |
+| Standard SUV      | $65.45        |
+| Large SUV         | $75.45        |
