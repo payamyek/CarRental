@@ -142,11 +142,6 @@ public class ProgramInterface extends JPanel implements ActionListener {
 
 	String carInfo[] = new String[8];
 
-	NewCar car = new NewCar();
-
-	Customer customer = new Customer();
-
-	NewCarJTable j1 = new NewCarJTable();
 
 	/**
 	 * Calls login menu and sets JPanel layout to null.
@@ -154,7 +149,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 	public ProgramInterface() {
 		setLayout(null);
 		loginMenu();
-		// db.cleanDatabases();
+		db.cleanDatabases();
 		db.setUpDatabases();
 	}
 
@@ -378,7 +373,7 @@ public class ProgramInterface extends JPanel implements ActionListener {
 		add(exitButton);
 
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 110, 26);
+		menuBar.setBounds(0, 0, 130, 26);
 		add(menuBar);
 
 		JMenu mnNewMenu = new JMenu("View");

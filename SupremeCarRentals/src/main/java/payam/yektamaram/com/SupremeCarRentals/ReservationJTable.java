@@ -72,12 +72,17 @@ public class ReservationJTable extends JFrame {
 	 * @throws ParseException
 	 */
 	public ReservationJTable() throws ParseException {
-		setBounds(10, 10, 1400, 700);
+		setBounds(10, 10, 500, 500);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		data = SQLite.getReservationTableData();
 		
-		DefaultTableModel model = new DefaultTableModel(data, columnNames);
+		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		JTable table = new JTable(model);
 		final TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(table.getModel());
 
@@ -123,7 +128,7 @@ public class ReservationJTable extends JFrame {
 		table.setSelectionBackground(Color.blue);
 		table.setFocusable(false);
 		table.setRowSelectionAllowed(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		JButton nextButton = new JButton("Back To Main Menu");
 		nextButton.setForeground(Color.WHITE);

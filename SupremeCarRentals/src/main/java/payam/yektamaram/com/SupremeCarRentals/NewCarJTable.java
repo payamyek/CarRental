@@ -75,7 +75,13 @@ public class NewCarJTable extends JFrame {
 	
 		data = SQLite.getCarTableData();
 
-		DefaultTableModel model = new DefaultTableModel(data, columnNames);
+		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
+		
 		JTable table = new JTable(model);
 		final TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(table.getModel());
 

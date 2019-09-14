@@ -77,12 +77,17 @@ public class InfoJTable extends JFrame {
 	 */
 	public InfoJTable() throws ParseException {
 
-		setBounds(10, 10, 655, 655);
+		setBounds(10, 10, 1400, 700);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		data = SQLite.getCustomerTableData();
 
-		DefaultTableModel model = new DefaultTableModel(data, columnNames);
+		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		JTable table = new JTable(model);
 		final TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(table.getModel());
 
@@ -132,7 +137,7 @@ public class InfoJTable extends JFrame {
 		table.setSelectionBackground(Color.blue);
 		table.setFocusable(false);
 		table.setRowSelectionAllowed(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		JButton nextButton = new JButton("Back To Main Menu");
 		nextButton.setForeground(Color.WHITE);
@@ -151,51 +156,4 @@ public class InfoJTable extends JFrame {
 
 	}
 
-	/**
-	 * Returns the frequency of a license number.
-	 * 
-	 * <p>
-	 * <h2>Local Variables</h2>
-	 * <p>
-	 * <b>frequency - </b> The amount of times a license number appears.
-	 * <p>
-	 * 
-	 * @param objArray 2D Array
-	 * @param license  The String license
-	 */
-	public static int getFreq(Object[][] objArray, String license) {
-		int frequency = 0;
-		for (int a = 0; a < objArray.length - 1; a++) {
-			if (objArray[a][3].equals(license)) {
-				frequency++;
-			}
-		}
-		return frequency;
-	}
-
-	/**
-	 * Returns the average rating of a customer.
-	 * 
-	 * <p>
-	 * <h2>Local Variables</h2>
-	 * <p>
-	 * <b>avgRating - </b> The average rating of a customer.
-	 * <p>
-	 * 
-	 * @param objArray 2D Array
-	 * @param license  The String license
-	 */
-	public static int getAvgRating(Object[][] objArray, String license) {
-		int avgRating = 0;
-		for (int a = 0; a < objArray.length - 1; a++) {
-			if (objArray[a][3].equals(license)) {
-				avgRating = avgRating + (int) objArray[a][14];
-			}
-		}
-		if (avgRating == 0) {
-			return 0;
-		} else {
-			return avgRating / (getFreq(data, license));
-		}
-	}
 }
