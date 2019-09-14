@@ -27,3 +27,14 @@ SupremeCarRentals is a Java Program that can be used by a car rental company to 
 ![ScreenShot](Screenshots/ChooseCar.PNG)
 
 - The JComboBox only allows the users to select cars that are available based on their chosen dates for their chosen vehicle type, in this case it is Economy.
+
+- After a valid car is choosen you will asked to enter the customer's information: 
+
+![ScreenShot](Screenshots/CustomerInfo.PNG)
+
+- The above is an example of valid customer information
+- The first and last names can contain lower and uppercase letters, periods, commas, apostrophes, and dashes
+- The accepted credit cards are Visa and Mastercard and must fit those standards
+- The insurance number should only be provided if the customer wants to use their own insurance and must contain 5 uppercase letters followed by two numbers
+- The driver license number follows the Ontario driver license format which is LNNNN-NNNNN-NNNNN where L is a capital letter and N is a number
+
