@@ -38,8 +38,8 @@
 		<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox</artifactId>
-			<version>2.0.12</version>
+			<artifactId>pdfbox</artifactId>s
+			<version>2.0.15</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox-tools -->
 		<dependency>
