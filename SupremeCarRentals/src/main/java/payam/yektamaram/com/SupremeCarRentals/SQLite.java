@@ -8,20 +8,28 @@ import java.util.Arrays;
  */
 public class SQLite {
 
-	/* Database Connection */
+	/**
+	 *  Database Connection 
+	 */
 	static Connection con = null;
 
-	static /* Allows for the execution of basic queries */
-	Statement stmt = null;
+	/**
+	 *  Allows for the execution of basic queries 
+	 */
+	static Statement stmt = null;
 
-	/* The result of the query */
+	/**
+	 * The result of the query 
+	 */
 	static ResultSet rs = null;
 
-	/* Precompiled SQL statement. */
+	/** 
+	 * Precompiled SQL statement. 
+	 */
 	PreparedStatement preparedStmt = null;
 
 	/**
-	 * Instantiates a new SQ lite.
+	 * Instantiates a new SQLite database.
 	 */
 	public SQLite() {
 		try {
@@ -35,7 +43,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Sets the up databases.
+	 * Sets up the databases.
 	 */
 	public void setUpDatabases() {
 		createCustomerTable();
@@ -44,7 +52,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Clean databases.
+	 * Drops all the database tables
 	 */
 	public void cleanDatabases() {
 		dropTable("car");
@@ -93,6 +101,11 @@ public class SQLite {
 		return carTable;
 	}
 
+	/**
+	 * Gets the reservation table data in the form of an array
+	 *
+	 * @return the reservation table data
+	 */
 	static Object[][] getReservationTableData() {
 
 		int numOfRecords = 0;
@@ -164,6 +177,11 @@ public class SQLite {
 	}
 	
 	
+	/**
+	 * Gets the customer table data in the form of an array
+	 *
+	 * @return the customer table data
+	 */
 	static Object[][] getCustomerTableData() {
 
 		int numOfRecords = 0;
@@ -292,6 +310,12 @@ public class SQLite {
 		}
 	}
 
+	/**
+	 * Fill up car fuel to maximum
+	 *
+	 * @param licensePlate the license plate
+	 * @param fuelCapacity the fuel capacity
+	 */
 	void fillUpFuel(String licensePlate, int fuelCapacity) {
 		try {
 
@@ -369,7 +393,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Check table exists.
+	 * Check if table exists.
 	 *
 	 * @param name the name
 	 * @return true, if successful
@@ -512,13 +536,10 @@ public class SQLite {
 	}
 
 	/**
-	 * Reservation number.
-	 *
-	 * @return the string
-	 */
-	/*
 	 * Counts the number of rows in the reservation table and returns a valid
 	 * reservation number
+	 *
+	 * @return the reservation number
 	 */
 	String reservationNumber() {
 
@@ -565,6 +586,12 @@ public class SQLite {
 		return reservationNumber;
 	}
 
+	/**
+	 * Checks if customer had personal insurance coverage.
+	 *
+	 * @param reservationNumber the reservation number
+	 * @return true, if successful
+	 */
 	boolean personalCoverage(String reservationNumber) {
 
 		try {
@@ -602,7 +629,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Insert customer.
+	 * Inserts customer into customer table
 	 *
 	 * @param customerData the customer data
 	 */
@@ -636,7 +663,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Delete customer.
+	 * Deletes customer from customer table
 	 *
 	 * @param email the email
 	 */
@@ -662,7 +689,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Gets the car types.
+	 * Gets the car types
 	 *
 	 * @param carType the car type
 	 * @return the car types
@@ -709,54 +736,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Validate login.
-	 *
-	 * @param email    the email
-	 * @param password the password
-	 * @return true, if successful
-	 */
-	private boolean validateLogin(String email, String password) {
-
-		boolean check = false;
-		// pass.setPassword("secretshh");
-
-		try {
-
-			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM customer WHERE email = \"" + email + "\"");
-
-			if (rs.next() != false) {
-				if (rs.getString("password").equals(password)) {
-					check = true;
-				}
-			}
-
-		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException sqlEx) {
-				} // ignore
-				rs = null;
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException sqlEx) {
-				} // ignore
-				stmt = null;
-			}
-		}
-
-		return check;
-	}
-
-	/**
-	 * Reservation search.
+	 * Checks if a reservation exists
 	 *
 	 * @param reservationNumber the reservation number
 	 * @return true, if successful
@@ -799,7 +779,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Insert reservation.
+	 * Insert reservation into reservation table
 	 *
 	 * @param pickUp            the pick up
 	 * @param dropOff           the drop off
@@ -865,9 +845,8 @@ public class SQLite {
 	 * @param model             the model
 	 * @param odometer          the odometer
 	 * @param licensePlate      the license plate
-	 * @param status            the status
-	 * @param numberOfScratches the number of scratches
-	 * @param accidents         the accidents
+	 * @param fuelCapacity the fuel capacity
+	 * @param fuelLevel the fuel level
 	 */
 	private void insertCar(String type, int year, String manufacturer, String model, int odometer, String licensePlate,
 			int fuelCapacity, int fuelLevel) {
@@ -902,7 +881,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Gets the car.
+	 * Gets the car data 
 	 *
 	 * @param licensePlate the license plate
 	 * @return the car
@@ -946,7 +925,7 @@ public class SQLite {
 	}
 
 	/**
-	 * Gets the customer.
+	 * Gets the customer data
 	 *
 	 * @param licensePlate the license plate
 	 * @return the customer
@@ -1102,6 +1081,12 @@ public class SQLite {
 		}
 	}
 
+	/**
+	 * Checks if customer has insurance coverage.
+	 *
+	 * @param reservationNumber the reservation number
+	 * @return true, if successful
+	 */
 	public boolean customerCoverage(String reservationNumber) {
 		boolean coverage = true;
 
@@ -1134,21 +1119,4 @@ public class SQLite {
 		}
 		return coverage;
 	}
-
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
-		SQLite db = new SQLite();
-		// db.cleanDatabases();
-		// db.setUpDatabases();
-		//SQLite.getReservationTableData();
-		//db.deleteReservation("INT-1");
-		//db.printTable("reservation");
-		// String arr [] = db.getCar("AFYT 754");
-		// System.out.println(db.getReservationLicensePlate("INT-1"));
-	}
-
 }

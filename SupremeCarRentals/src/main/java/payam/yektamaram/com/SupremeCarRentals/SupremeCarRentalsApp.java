@@ -22,8 +22,6 @@ import java.text.ParseException;
 @SuppressWarnings("serial")
 public class SupremeCarRentalsApp extends JFrame 
 {
-	//ProgramInterface a = new ProgramInterface();
-
 	/**
 	 * Adds program interface to JFrame and sets size to 650 by 500 and makes it
 	 * visible.

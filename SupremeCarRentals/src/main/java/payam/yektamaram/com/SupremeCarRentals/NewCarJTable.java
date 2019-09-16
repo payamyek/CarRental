@@ -70,6 +70,7 @@ public class NewCarJTable extends JFrame {
 	 *            the title
 	 */
 	public NewCarJTable() {
+		super("Car Table");
 		setSize(830, 474);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	

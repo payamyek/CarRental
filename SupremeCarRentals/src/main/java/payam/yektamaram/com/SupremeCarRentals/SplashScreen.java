@@ -61,6 +61,7 @@ public class SplashScreen extends JFrame {
 	 * @since 2018-05-14
 	 */
 	public SplashScreen() {
+		super("Loading Screen");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 550);
 		contentPane = new JPanel();
